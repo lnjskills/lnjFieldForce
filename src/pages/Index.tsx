@@ -25,66 +25,66 @@ const Index = () => {
   const [password, setPassword] = useState("");
 
   const userRoles = [
-    {
-      value: "admin",
-      label: "Admin",
-      path: "/admin/dashboard",
-    },
-    {
-      value: "state-head",
-      label: "State Head",
-      path: "/state-head/dashboard",
-    },
-    {
-      value: "mobilizer",
-      label: "Mobilizer",
-      path: "/mobilizer/new",
-    },
-    {
-      value: "candidate",
-      label: "Candidate",
-      path: "/candidate",
-    },
-    {
-      value: "trainer",
-      label: "Trainer",
-      path: "/trainer",
-    },
+    // {
+    //   value: "admin",
+    //   label: "Admin",
+    //   path: "/admin/dashboard",
+    // },
+    // {
+    //   value: "state-head",
+    //   label: "State Head",
+    //   path: "/state-head/dashboard",
+    // },
+    // {
+    //   value: "mobilizer",
+    //   label: "Mobilizer",
+    //   path: "/mobilizer/new",
+    // },
+    // {
+    //   value: "candidate",
+    //   label: "Candidate",
+    //   path: "/candidate",
+    // },
+    // {
+    //   value: "trainer",
+    //   label: "Trainer",
+    //   path: "/trainer",
+    // },
     {
       value: "counsellor",
       label: "Counsellor",
       path: "/counsellor/dashboard",
     },
-    {
-      value: "center-manager",
-      label: "Center Manager",
-      path: "/center-manager/dashboard",
-    },
+    // {
+    //   value: "center-manager",
+    //   label: "Center Manager",
+    //   path: "/center-manager/dashboard",
+    // },
     {
       value: "mis",
       label: "MIS",
       path: "/mis/dashboard",
     },
-    {
-      value: "company-hr",
-      label: "Company HR",
-      path: "/company-hr/dashboard",
-    },
-    {
-      value: "ppc-admin",
-      label: "PPC Admin",
-      path: "/ppc-admin/dashboard",
-    },
-    {
-      value: "poc",
-      label: "POC (Point of Contact)",
-      path: "/poc/dashboard",
-    },
-    {
-      value: "admin-department",
-      label: "Admin Department",
-      path: "/admin-department/dashboard",
-    },
+    // {
+    //   value: "company-hr",
+    //   label: "Company HR",
+    //   path: "/company-hr/dashboard",
+    // },
+    // {
+    //   value: "ppc-admin",
+    //   label: "PPC Admin",
+    //   path: "/ppc-admin/dashboard",
+    // },
+    // {
+    //   value: "poc",
+    //   label: "POC (Point of Contact)",
+    //   path: "/poc/dashboard",
+    // },
+    // {
+    //   value: "admin-department",
+    //   label: "Admin Department",
+    //   path: "/admin-department/dashboard",
+    // },
   ];
 
   const handleLogin = async (e) => {

@@ -56,7 +56,7 @@ export const apiSlice = createApi({
       query: (data) => ({
         url: "/counsellor/candidate/status/change",
         method: "PUT",
-        body: data, // Fixed: Use body instead of data
+        body: data,
       }),
       invalidatesTags: ["Candidates"],
     }),
