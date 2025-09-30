@@ -7,12 +7,17 @@ export const apiSlice = createApi({
     baseUrl: "https://app-e2hhu.ondigitalocean.app",
     prepareHeaders: (headers, { getState }) => {
       if (typeof window === "undefined") {
-        const cookies = parse(headers.get("cookie") || "");
-        const token = cookies.token;
-        if (token) {
-          headers.set("Authorization", `Bearer ${token}`);
+        // Server-side: Parse cookies from headers
+        const cookieHeader = headers.get("cookie");
+        if (cookieHeader) {
+          const cookies = parse(cookieHeader);
+          const token = cookies.token;
+          if (token) {
+            headers.set("Authorization", `Bearer ${token}`);
+          }
         }
       } else {
+        // Client-side: Use localStorage
         const token = localStorage.getItem("token");
         if (token) {
           headers.set("Authorization", `Bearer ${token}`);
@@ -23,7 +28,6 @@ export const apiSlice = createApi({
   }),
   tagTypes: ["User", "Candidates", "Mobilizers"],
   endpoints: (builder) => ({
-    // Auth APIs
     login: builder.mutation({
       query: (credentials) => ({
         url: "/auth/role/login",
@@ -32,7 +36,6 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ["User"],
     }),
-
     getCandidatesList: builder.query({
       query: () => ({
         url: "/candidates/candidate/list",
