@@ -42,6 +42,7 @@ import {
 import {
   useGetMobilizerListQuery,
   useGetMobiliserCandidateListQuery,
+  useGetCandidateDetailsQuery,
   useUpdateCandidateStatusMutation,
 } from "@/store/slices/apiSlice";
 
@@ -81,7 +82,7 @@ export default function OFRManagement() {
     isLoading: mobilizerLoading,
     error: mobilizerError,
     refetch: refetchMobilizers,
-  } = useGetMobilizerListQuery();
+  } = useGetMobilizerListQuery(undefined);
 
   const [updateCandidateStatus, { isLoading: isUpdating }] =
     useUpdateCandidateStatusMutation();
@@ -95,25 +96,68 @@ export default function OFRManagement() {
     skip: !selectedMobilizerId,
   });
 
+  // Candidate details via RTK Query (uses apiSlice baseUrl + auth headers)
+  const [selectedCandidateId, setSelectedCandidateId] = useState<number | null>(
+    null
+  );
+
+  const {
+    data: candidateDetailsData,
+    isLoading: candidateDetailsLoading,
+    error: candidateDetailsError,
+  } = useGetCandidateDetailsQuery(selectedCandidateId, {
+    skip: !selectedCandidateId,
+  });
+  console.log(candidateDetailsData, "candidate details");
+
+  useEffect(() => {
+    if (candidateDetailsData) {
+      setSelectedCandidate(candidateDetailsData);
+      setNewStatus(candidateDetailsData.status || "");
+      setCounsellingNotes(candidateDetailsData.notes || "");
+    }
+
+    if (candidateDetailsError) {
+      toast({
+        title: "Error",
+        description: "Failed to fetch candidate details. Please try again.",
+        variant: "destructive",
+      });
+      setShowDetailsDialog(false);
+    }
+  }, [candidateDetailsData, candidateDetailsError, toast]);
   // Derived data
-  const districts = mobilizerData?.data
-    ? [
-        ...new Set(
-          mobilizerData.data.map((m) => m.area_location).filter(Boolean)
-        ),
-      ]
+  type Mobilizer = {
+    id?: number | string;
+    name?: string;
+    role?: string;
+    area_location?: string | null;
+    ofrCount?: number;
+  };
+
+  const mobilizerList: Mobilizer[] = Array.isArray(mobilizerData?.data)
+    ? (mobilizerData.data as Mobilizer[])
     : [];
 
-  const filteredMobilizers =
-    mobilizerData?.data?.filter((mobilizer) => {
-      const matchesDistrict =
-        !selectedDistrict || mobilizer.area_location === selectedDistrict;
-      const matchesSearch =
-        !searchTerm ||
-        mobilizer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        mobilizer.role.toLowerCase().includes(searchTerm.toLowerCase());
-      return matchesDistrict && matchesSearch;
-    }) || [];
+  const districts: string[] = mobilizerList.length
+    ? Array.from(
+        new Set(
+          mobilizerList
+            .map((m) => (m.area_location || "").toString().trim())
+            .filter(Boolean)
+        )
+      )
+    : [];
+
+  const filteredMobilizers = mobilizerList.filter((mobilizer) => {
+    const matchesDistrict =
+      !selectedDistrict || (mobilizer.area_location || "") === selectedDistrict;
+    const matchesSearch =
+      !searchTerm ||
+      (mobilizer.name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (mobilizer.role || "").toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesDistrict && matchesSearch;
+  });
   console.log(filteredMobilizers, "filteredMobilizers");
 
   // Process candidate data from API
@@ -189,9 +233,19 @@ export default function OFRManagement() {
   };
 
   const handleViewDetails = (candidate) => {
-    setSelectedCandidate(candidate);
-    setNewStatus(candidate.status);
-    setCounsellingNotes(candidate.counsellingNotes || "");
+    if (!candidate?.id) {
+      toast({
+        title: "Invalid Candidate",
+        description: "Candidate ID missing.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Trigger RTK Query to fetch candidate details (caching + auth headers handled by apiSlice)
+    setSelectedCandidateId(candidate.id);
+    // clear any previous selection while the new one is loading
+    setSelectedCandidate(null);
     setShowDetailsDialog(true);
   };
 
@@ -484,7 +538,13 @@ export default function OFRManagement() {
             <DialogHeader>
               <DialogTitle>Candidate Details & Verification</DialogTitle>
             </DialogHeader>
-            {selectedCandidate && (
+            {candidateDetailsLoading ? (
+              <p className="text-center py-6">Loading candidate details...</p>
+            ) : candidateDetailsError ? (
+              <p className="text-center py-6 text-red-600">
+                Failed to load candidate details.
+              </p>
+            ) : selectedCandidate ? (
               <div className="space-y-6">
                 {/* Basic Information */}
                 <Card>
@@ -493,8 +553,18 @@ export default function OFRManagement() {
                   </CardHeader>
                   <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
+                      <Label className="text-sm font-medium">ID</Label>
+                      <p className="text-sm">{selectedCandidate.id}</p>
+                    </div>
+                    <div>
                       <Label className="text-sm font-medium">Full Name</Label>
-                      <p className="text-sm">{selectedCandidate.name}</p>
+                      <p className="text-sm">
+                        {`${selectedCandidate.salutation || ""} ${
+                          selectedCandidate.first_name || ""
+                        } ${selectedCandidate.middle_name || ""} ${
+                          selectedCandidate.last_name || ""
+                        }`.trim()}
+                      </p>
                     </div>
                     <div>
                       <Label className="text-sm font-medium">Project</Label>
@@ -502,21 +572,23 @@ export default function OFRManagement() {
                     </div>
                     <div>
                       <Label className="text-sm font-medium">Center Code</Label>
-                      <p className="text-sm">{selectedCandidate.centerCode}</p>
+                      <p className="text-sm">
+                        {selectedCandidate.center_code ||
+                          selectedCandidate.centerCode}
+                      </p>
                     </div>
                     <div>
                       <Label className="text-sm font-medium">Mobile</Label>
-                      <p className="text-sm">{selectedCandidate.mobile}</p>
+                      <p className="text-sm">
+                        {selectedCandidate.mobile1 || selectedCandidate.mobile}
+                      </p>
                     </div>
                     <div>
                       <Label className="text-sm font-medium">Email</Label>
-                      <p className="text-sm">{selectedCandidate.email}</p>
-                    </div>
-                    <div>
-                      <Label className="text-sm font-medium">
-                        Father's Name
-                      </Label>
-                      <p className="text-sm">{selectedCandidate.fatherName}</p>
+                      <p className="text-sm">
+                        {selectedCandidate.primary_email ||
+                          selectedCandidate.email}
+                      </p>
                     </div>
                   </CardContent>
                 </Card>
@@ -528,15 +600,31 @@ export default function OFRManagement() {
                   </CardHeader>
                   <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
+                      <Label className="text-sm font-medium">Gender</Label>
+                      <p className="text-sm">{selectedCandidate.gender}</p>
+                    </div>
+                    <div>
+                      <Label className="text-sm font-medium">DOB</Label>
+                      <p className="text-sm">
+                        {selectedCandidate.dob
+                          ? new Date(selectedCandidate.dob).toLocaleDateString()
+                          : "N/A"}
+                      </p>
+                    </div>
+                    <div>
                       <Label className="text-sm font-medium">Blood Group</Label>
-                      <p className="text-sm">{selectedCandidate.bloodGroup}</p>
+                      <p className="text-sm">
+                        {selectedCandidate.blood_group ||
+                          selectedCandidate.bloodGroup}
+                      </p>
                     </div>
                     <div>
                       <Label className="text-sm font-medium">
                         Mother Tongue
                       </Label>
                       <p className="text-sm">
-                        {selectedCandidate.motherTongue}
+                        {selectedCandidate.mother_tongue ||
+                          selectedCandidate.motherTongue}
                       </p>
                     </div>
                     <div>
@@ -550,24 +638,46 @@ export default function OFRManagement() {
                   </CardContent>
                 </Card>
 
-                {/* Family Details */}
+                {/* Family & Guardian Details */}
                 <Card>
                   <CardHeader>
-                    <CardTitle>Family Details</CardTitle>
+                    <CardTitle>Family & Guardian</CardTitle>
                   </CardHeader>
                   <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <Label className="text-sm font-medium">
-                        Mother's Name
+                        Father's Name
                       </Label>
-                      <p className="text-sm">{selectedCandidate.motherName}</p>
+                      <p className="text-sm">
+                        {`${selectedCandidate.father_first_name || ""} ${
+                          selectedCandidate.father_last_name || ""
+                        }`.trim() || "N/A"}
+                      </p>
                     </div>
                     <div>
                       <Label className="text-sm font-medium">
-                        Guardian's Name
+                        Mother's Name
                       </Label>
                       <p className="text-sm">
-                        {selectedCandidate.guardiansName}
+                        {selectedCandidate.mother_name ||
+                          selectedCandidate.motherName}
+                      </p>
+                    </div>
+                    <div>
+                      <Label className="text-sm font-medium">
+                        Guardian Type
+                      </Label>
+                      <p className="text-sm">
+                        {selectedCandidate.guardian_type}
+                      </p>
+                    </div>
+                    <div>
+                      <Label className="text-sm font-medium">
+                        Guardian Name
+                      </Label>
+                      <p className="text-sm">
+                        {selectedCandidate.guardian_name ||
+                          selectedCandidate.guardiansName}
                       </p>
                     </div>
                     <div>
@@ -575,17 +685,64 @@ export default function OFRManagement() {
                         Marital Status
                       </Label>
                       <p className="text-sm">
-                        {selectedCandidate.maritalStatus}
+                        {selectedCandidate.marital_status ||
+                          selectedCandidate.maritalStatus}
                       </p>
                     </div>
                     <div>
                       <Label className="text-sm font-medium">
-                        Annual Income
+                        Annual Family Income
                       </Label>
                       <p className="text-sm">
-                        {selectedCandidate.annualIncome}
+                        {selectedCandidate.annual_family_income
+                          ? `₹${parseInt(
+                              selectedCandidate.annual_family_income
+                            ).toLocaleString()}`
+                          : selectedCandidate.annualIncome || "N/A"}
                       </p>
                     </div>
+                  </CardContent>
+                </Card>
+
+                {/* Documents (if any) */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Documents</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {selectedCandidate.documents &&
+                    selectedCandidate.documents.length > 0 ? (
+                      <ul className="space-y-2">
+                        {selectedCandidate.documents.map((doc) => (
+                          <li
+                            key={doc.documentId || doc.candidate_id}
+                            className="flex items-center justify-between"
+                          >
+                            <div>
+                              <div className="font-medium">{doc.doc_type}</div>
+                              <div className="text-sm text-muted-foreground">
+                                Uploaded:{" "}
+                                {doc.uploaded_at
+                                  ? new Date(doc.uploaded_at).toLocaleString()
+                                  : "N/A"}
+                              </div>
+                            </div>
+                            {doc.file_url ? (
+                              <a
+                                href={doc.file_url}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="text-primary underline"
+                              >
+                                View
+                              </a>
+                            ) : null}
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className="text-sm">No documents available.</p>
+                    )}
                   </CardContent>
                 </Card>
 
@@ -595,7 +752,50 @@ export default function OFRManagement() {
                     <CardTitle>Address</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm">{selectedCandidate.address}</p>
+                    <p className="text-sm">
+                      {selectedCandidate.address_line ||
+                        selectedCandidate.address ||
+                        "N/A"}
+                    </p>
+                    <p className="text-sm mt-2">
+                      {selectedCandidate.district
+                        ? `${selectedCandidate.district}, ${
+                            selectedCandidate.state || ""
+                          }`
+                        : ""}
+                    </p>
+                  </CardContent>
+                </Card>
+
+                {/* Raw Notes & Metadata */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Raw Notes & Metadata</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p>
+                      <strong>Notes:</strong> {selectedCandidate.notes || "N/A"}
+                    </p>
+                    <p>
+                      <strong>Status:</strong>{" "}
+                      {selectedCandidate.status || selectedCandidate.state}
+                    </p>
+                    <p>
+                      <strong>Created At:</strong>{" "}
+                      {selectedCandidate.created_at
+                        ? new Date(
+                            selectedCandidate.created_at
+                          ).toLocaleString()
+                        : "N/A"}
+                    </p>
+                    <p>
+                      <strong>Updated At:</strong>{" "}
+                      {selectedCandidate.updated_at
+                        ? new Date(
+                            selectedCandidate.updated_at
+                          ).toLocaleString()
+                        : "N/A"}
+                    </p>
                   </CardContent>
                 </Card>
 
@@ -662,7 +862,7 @@ export default function OFRManagement() {
                   </CardContent>
                 </Card>
               </div>
-            )}
+            ) : null}
           </DialogContent>
         </Dialog>
       </div>

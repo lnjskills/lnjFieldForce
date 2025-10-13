@@ -52,7 +52,7 @@ export const apiSlice = createApi({
       providesTags: ["Candidates"],
     }),
     getCandidateDetails: builder.query({
-      query: (id) => `/counsellor/candidate/${id}`,
+      query: (id) => `/candidates/detail/${id}`,
       providesTags: ["Candidates"],
     }),
     updateCandidateStatus: builder.mutation({
