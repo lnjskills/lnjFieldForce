@@ -170,7 +170,10 @@ const Index = () => {
                   </Select>
                 </div>
                 {loginError && (
-                  <div className="text-red-500 text-sm p-3 bg-red-50 rounded-md border border-red-200 mb-4">
+                  <div
+                    className="text-red-500 
+                  text-sm p-3 bg-red-50 rounded-md border border-red-200 mb-4"
+                  >
                     {loginError}
                   </div>
                 )}
