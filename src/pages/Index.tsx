@@ -19,76 +19,35 @@ import { useLoginMutation } from "@/store/slices/apiSlice";
 const Index = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [login, { isLoading, error }] = useLoginMutation();
+  const [login, { isLoading }] = useLoginMutation();
   const [selectedRole, setSelectedRole] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loginError, setLoginError] = useState("");
 
   const userRoles = [
-    // {
-    //   value: "admin",
-    //   label: "Admin",
-    //   path: "/admin/dashboard",
-    // },
-    // {
-    //   value: "state-head",
-    //   label: "State Head",
-    //   path: "/state-head/dashboard",
-    // },
-    // {
-    //   value: "mobilizer",
-    //   label: "Mobilizer",
-    //   path: "/mobilizer/new",
-    // },
-    // {
-    //   value: "candidate",
-    //   label: "Candidate",
-    //   path: "/candidate",
-    // },
-    // {
-    //   value: "trainer",
-    //   label: "Trainer",
-    //   path: "/trainer",
-    // },
     {
       value: "counsellor",
       label: "Counsellor",
       path: "/counsellor/dashboard",
     },
-    // {
-    //   value: "center-manager",
-    //   label: "Center Manager",
-    //   path: "/center-manager/dashboard",
-    // },
     {
       value: "mis",
       label: "MIS",
       path: "/mis/dashboard",
     },
-    // {
-    //   value: "company-hr",
-    //   label: "Company HR",
-    //   path: "/company-hr/dashboard",
-    // },
-    // {
-    //   value: "ppc-admin",
-    //   label: "PPC Admin",
-    //   path: "/ppc-admin/dashboard",
-    // },
-    // {
-    //   value: "poc",
-    //   label: "POC (Point of Contact)",
-    //   path: "/poc/dashboard",
-    // },
-    // {
-    //   value: "admin-department",
-    //   label: "Admin Department",
-    //   path: "/admin-department/dashboard",
-    // },
   ];
+
+  const clearError = () => {
+    if (loginError) {
+      setLoginError("");
+    }
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setLoginError(""); // Clear previous errors
+
     if (selectedRole && email && password) {
       try {
         const role = userRoles.find((r) => r.value === selectedRole);
@@ -99,9 +58,9 @@ const Index = () => {
             role: selectedRole.toUpperCase(),
           }).unwrap();
 
-          // Save token to localStorage (directly, no window check needed)
+          // Save token to localStorage
           localStorage.setItem("token", response.token);
-          console.log(response.token);
+          console.log("Login successful, token:", response.token);
 
           dispatch(
             setUser({
@@ -117,8 +76,31 @@ const Index = () => {
         }
       } catch (err) {
         console.error("Login error:", err);
+
+        // Handle different error structures
+        let errorMessage = "Login failed. Please try again.";
+
+        if (err?.data?.error) {
+          // RTK Query error structure: { data: { error: "invalid credentials" } }
+          errorMessage = err.data.error; // This will show "invalid credentials"
+        } else if (err?.message) {
+          // Generic error message
+          errorMessage = err.message;
+        } else if (typeof err === "string") {
+          errorMessage = err;
+        }
+
+        setLoginError(errorMessage);
+        console.error("Error message:", errorMessage);
       }
+    } else {
+      setLoginError("Please fill all fields.");
     }
+  };
+
+  const handleInputChange = (setter) => (e) => {
+    setter(e.target.value);
+    clearError(); // Clear error when user starts typing
   };
 
   return (
@@ -142,11 +124,12 @@ const Index = () => {
                   <Label htmlFor="email">Email</Label>
                   <Input
                     id="email"
-                    type="text"
+                    type="email"
                     placeholder="Enter your email"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={handleInputChange(setEmail)}
                     required
+                    disabled={isLoading}
                   />
                 </div>
 
@@ -157,8 +140,9 @@ const Index = () => {
                     type="password"
                     placeholder="Enter your password"
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={handleInputChange(setPassword)}
                     required
+                    disabled={isLoading}
                   />
                 </div>
 
@@ -166,8 +150,12 @@ const Index = () => {
                   <Label htmlFor="role">Select Role</Label>
                   <Select
                     value={selectedRole}
-                    onValueChange={setSelectedRole}
+                    onValueChange={(value) => {
+                      setSelectedRole(value);
+                      clearError();
+                    }}
                     required
+                    disabled={isLoading}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Choose your role" />
@@ -181,17 +169,24 @@ const Index = () => {
                     </SelectContent>
                   </Select>
                 </div>
-
-                {error && (
-                  <div className="text-red-500 text-sm">{String(error)}</div>
+                {loginError && (
+                  <div className="text-red-500 text-sm p-3 bg-red-50 rounded-md border border-red-200 mb-4">
+                    {loginError}
+                  </div>
                 )}
-
                 <Button
                   type="submit"
                   className="w-full"
                   disabled={!selectedRole || !email || !password || isLoading}
                 >
-                  {isLoading ? "Logging in..." : "Login"}
+                  {isLoading ? (
+                    <>
+                      <span className="mr-2">🔄</span>
+                      Logging in...
+                    </>
+                  ) : (
+                    "Login"
+                  )}
                 </Button>
               </form>
             </CardContent>
