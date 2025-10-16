@@ -433,14 +433,14 @@ export default function OFRManagement() {
                         </div>
                       </div>
                       <div className="flex items-center gap-4">
-                        <div className="text-center">
+                        {/* <div className="text-center">
                           <div className="text-2xl font-bold text-primary">
                             {mobilizer.ofrCount || 0}
                           </div>
                           <div className="text-xs text-muted-foreground">
                             OFRs Available
                           </div>
-                        </div>
+                        </div> */}
                         <Button
                           onClick={() => handlePullOFRs(mobilizer)}
                           disabled={candidateLoading}
