@@ -131,7 +131,7 @@ export default function OFRManagement() {
     id?: number | string;
     name?: string;
     role?: string;
-    area_location?: string | null;
+    state?: string | null;
     ofrCount?: number;
   };
 
@@ -143,7 +143,7 @@ export default function OFRManagement() {
     ? Array.from(
         new Set(
           mobilizerList
-            .map((m) => (m.area_location || "").toString().trim())
+            .map((m) => (m.state || "").toString().trim())
             .filter(Boolean)
         )
       )
@@ -151,7 +151,7 @@ export default function OFRManagement() {
 
   const filteredMobilizers = mobilizerList.filter((mobilizer) => {
     const matchesDistrict =
-      !selectedDistrict || (mobilizer.area_location || "") === selectedDistrict;
+      !selectedDistrict || (mobilizer.state || "") === selectedDistrict;
     const matchesSearch =
       !searchTerm ||
       (mobilizer.name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -427,7 +427,7 @@ export default function OFRManagement() {
                             </span>
                             <span className="flex items-center gap-1">
                               <MapPin className="h-3 w-3" />
-                              {mobilizer.area_location || "N/A"}
+                              {mobilizer.state || "N/A"}
                             </span>
                           </div>
                         </div>
