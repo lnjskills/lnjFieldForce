@@ -533,8 +533,9 @@ export default function OFRManagement() {
         </Dialog>
 
         {/* Candidate Details Dialog */}
+        {/* Candidate Details Dialog */}
         <Dialog open={showDetailsDialog} onOpenChange={setShowDetailsDialog}>
-          <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+          <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>Candidate Details & Verification</DialogTitle>
             </DialogHeader>
@@ -551,43 +552,118 @@ export default function OFRManagement() {
                   <CardHeader>
                     <CardTitle>Basic Information</CardTitle>
                   </CardHeader>
-                  <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     <div>
                       <Label className="text-sm font-medium">ID</Label>
                       <p className="text-sm">{selectedCandidate.id}</p>
                     </div>
                     <div>
                       <Label className="text-sm font-medium">Full Name</Label>
-                      <p className="text-sm">
+                      <p className="text-sm font-medium">
                         {`${selectedCandidate.salutation || ""} ${
                           selectedCandidate.first_name || ""
                         } ${selectedCandidate.middle_name || ""} ${
                           selectedCandidate.last_name || ""
-                        }`.trim()}
+                        }`.trim() || "N/A"}
                       </p>
                     </div>
                     <div>
                       <Label className="text-sm font-medium">Project</Label>
-                      <p className="text-sm">{selectedCandidate.project}</p>
+                      <p className="text-sm">
+                        {selectedCandidate.project || "N/A"}
+                      </p>
                     </div>
                     <div>
                       <Label className="text-sm font-medium">Center Code</Label>
                       <p className="text-sm">
-                        {selectedCandidate.center_code ||
-                          selectedCandidate.centerCode}
+                        {selectedCandidate.center_code || "N/A"}
                       </p>
                     </div>
                     <div>
-                      <Label className="text-sm font-medium">Mobile</Label>
+                      <Label className="text-sm font-medium">Mobile 1</Label>
                       <p className="text-sm">
-                        {selectedCandidate.mobile1 || selectedCandidate.mobile}
+                        {selectedCandidate.mobile1 || "N/A"}
                       </p>
                     </div>
                     <div>
-                      <Label className="text-sm font-medium">Email</Label>
+                      <Label className="text-sm font-medium">Mobile 2</Label>
                       <p className="text-sm">
-                        {selectedCandidate.primary_email ||
-                          selectedCandidate.email}
+                        {selectedCandidate.mobile2 || "N/A"}
+                      </p>
+                    </div>
+                    <div>
+                      <Label className="text-sm font-medium">
+                        Primary Email
+                      </Label>
+                      <p className="text-sm">
+                        {selectedCandidate.primary_email || "N/A"}
+                      </p>
+                    </div>
+                    <div>
+                      <Label className="text-sm font-medium">
+                        Emergency Contact
+                      </Label>
+                      <p className="text-sm">
+                        {selectedCandidate.emergency_contact || "N/A"}
+                      </p>
+                    </div>
+                    <div>
+                      <Label className="text-sm font-medium">
+                        Emergency Relation
+                      </Label>
+                      <p className="text-sm">
+                        {selectedCandidate.emergency_relation || "N/A"}
+                      </p>
+                    </div>
+                    <div>
+                      <Label className="text-sm font-medium">Created By</Label>
+                      <p className="text-sm">
+                        {selectedCandidate.created_by || "N/A"}
+                      </p>
+                    </div>
+                    <div>
+                      <Label className="text-sm font-medium">Photo URL</Label>
+                      <p className="text-sm">
+                        {selectedCandidate.photo_url ? (
+                          <a
+                            href={selectedCandidate.photo_url}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-primary underline text-xs"
+                          >
+                            View Photo
+                          </a>
+                        ) : (
+                          "N/A"
+                        )}
+                      </p>
+                    </div>
+                    <div>
+                      <Label className="text-sm font-medium">Aadhaar No</Label>
+                      <p className="text-sm">
+                        {selectedCandidate.aadhar_no || "N/A"}
+                      </p>
+                    </div>
+                    <div>
+                      <Label className="text-sm font-medium">
+                        Bank Account
+                      </Label>
+                      <p className="text-sm">
+                        {selectedCandidate.bank_acct || "N/A"}
+                      </p>
+                    </div>
+                    <div>
+                      <Label className="text-sm font-medium">Region ID</Label>
+                      <p className="text-sm">
+                        {selectedCandidate.region_id || "N/A"}
+                      </p>
+                    </div>
+                    <div>
+                      <Label className="text-sm font-medium">
+                        Pre Training
+                      </Label>
+                      <p className="text-sm">
+                        {selectedCandidate.pre_training || "N/A"}
                       </p>
                     </div>
                   </CardContent>
@@ -598,13 +674,17 @@ export default function OFRManagement() {
                   <CardHeader>
                     <CardTitle>Personal Details</CardTitle>
                   </CardHeader>
-                  <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     <div>
                       <Label className="text-sm font-medium">Gender</Label>
-                      <p className="text-sm">{selectedCandidate.gender}</p>
+                      <p className="text-sm">
+                        {selectedCandidate.gender || "N/A"}
+                      </p>
                     </div>
                     <div>
-                      <Label className="text-sm font-medium">DOB</Label>
+                      <Label className="text-sm font-medium">
+                        Date of Birth
+                      </Label>
                       <p className="text-sm">
                         {selectedCandidate.dob
                           ? new Date(selectedCandidate.dob).toLocaleDateString()
@@ -612,10 +692,17 @@ export default function OFRManagement() {
                       </p>
                     </div>
                     <div>
+                      <Label className="text-sm font-medium">Category</Label>
+                      <p className="text-sm">
+                        <Badge variant="secondary">
+                          {selectedCandidate.category || "N/A"}
+                        </Badge>
+                      </p>
+                    </div>
+                    <div>
                       <Label className="text-sm font-medium">Blood Group</Label>
                       <p className="text-sm">
-                        {selectedCandidate.blood_group ||
-                          selectedCandidate.bloodGroup}
+                        {selectedCandidate.blood_group || "N/A"}
                       </p>
                     </div>
                     <div>
@@ -623,17 +710,48 @@ export default function OFRManagement() {
                         Mother Tongue
                       </Label>
                       <p className="text-sm">
-                        {selectedCandidate.mother_tongue ||
-                          selectedCandidate.motherTongue}
+                        {selectedCandidate.mother_tongue || "N/A"}
                       </p>
                     </div>
                     <div>
                       <Label className="text-sm font-medium">Religion</Label>
-                      <p className="text-sm">{selectedCandidate.religion}</p>
+                      <p className="text-sm">
+                        {selectedCandidate.religion || "N/A"}
+                      </p>
                     </div>
                     <div>
                       <Label className="text-sm font-medium">Community</Label>
-                      <p className="text-sm">{selectedCandidate.community}</p>
+                      <p className="text-sm">
+                        {selectedCandidate.community || "N/A"}
+                      </p>
+                    </div>
+                    <div>
+                      <Label className="text-sm font-medium">
+                        Special Group
+                      </Label>
+                      <p className="text-sm">
+                        {selectedCandidate.special_group || "N/A"}
+                      </p>
+                    </div>
+                    <div>
+                      <Label className="text-sm font-medium">
+                        Special Group Category
+                      </Label>
+                      <p className="text-sm">
+                        {selectedCandidate.special_group_category || "N/A"}
+                      </p>
+                    </div>
+                    <div>
+                      <Label className="text-sm font-medium">PWD</Label>
+                      <p className="text-sm">
+                        {selectedCandidate.pwd === "Yes" ? (
+                          <Badge variant="destructive">
+                            Yes - {selectedCandidate.pwd_category || "N/A"}
+                          </Badge>
+                        ) : (
+                          "No"
+                        )}
+                      </p>
                     </div>
                   </CardContent>
                 </Card>
@@ -641,9 +759,9 @@ export default function OFRManagement() {
                 {/* Family & Guardian Details */}
                 <Card>
                   <CardHeader>
-                    <CardTitle>Family & Guardian</CardTitle>
+                    <CardTitle>Family & Guardian Details</CardTitle>
                   </CardHeader>
-                  <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     <div>
                       <Label className="text-sm font-medium">
                         Father's Name
@@ -656,11 +774,26 @@ export default function OFRManagement() {
                     </div>
                     <div>
                       <Label className="text-sm font-medium">
+                        Father's Occupation
+                      </Label>
+                      <p className="text-sm">
+                        {selectedCandidate.father_occupation || "N/A"}
+                      </p>
+                    </div>
+                    <div>
+                      <Label className="text-sm font-medium">
                         Mother's Name
                       </Label>
                       <p className="text-sm">
-                        {selectedCandidate.mother_name ||
-                          selectedCandidate.motherName}
+                        {selectedCandidate.mother_name || "N/A"}
+                      </p>
+                    </div>
+                    <div>
+                      <Label className="text-sm font-medium">
+                        Mother's Occupation
+                      </Label>
+                      <p className="text-sm">
+                        {selectedCandidate.mother_occupation || "N/A"}
                       </p>
                     </div>
                     <div>
@@ -668,7 +801,7 @@ export default function OFRManagement() {
                         Guardian Type
                       </Label>
                       <p className="text-sm">
-                        {selectedCandidate.guardian_type}
+                        {selectedCandidate.guardian_type || "N/A"}
                       </p>
                     </div>
                     <div>
@@ -676,8 +809,7 @@ export default function OFRManagement() {
                         Guardian Name
                       </Label>
                       <p className="text-sm">
-                        {selectedCandidate.guardian_name ||
-                          selectedCandidate.guardiansName}
+                        {selectedCandidate.guardian_name || "N/A"}
                       </p>
                     </div>
                     <div>
@@ -685,26 +817,110 @@ export default function OFRManagement() {
                         Marital Status
                       </Label>
                       <p className="text-sm">
-                        {selectedCandidate.marital_status ||
-                          selectedCandidate.maritalStatus}
+                        {selectedCandidate.marital_status || "N/A"}
+                      </p>
+                    </div>
+                    <div>
+                      <Label className="text-sm font-medium">Spouse Name</Label>
+                      <p className="text-sm">
+                        {selectedCandidate.spouse_name || "N/A"}
+                      </p>
+                    </div>
+                    <div>
+                      <Label className="text-sm font-medium">Spouse DOB</Label>
+                      <p className="text-sm">
+                        {selectedCandidate.spouse_dob
+                          ? new Date(
+                              selectedCandidate.spouse_dob
+                            ).toLocaleDateString()
+                          : "N/A"}
                       </p>
                     </div>
                     <div>
                       <Label className="text-sm font-medium">
+                        Anniversary Date
+                      </Label>
+                      <p className="text-sm">
+                        {selectedCandidate.anniversary_date
+                          ? new Date(
+                              selectedCandidate.anniversary_date
+                            ).toLocaleDateString()
+                          : "N/A"}
+                      </p>
+                    </div>
+                    <div>
+                      <Label className="text-sm font-medium">
+                        No. of Children
+                      </Label>
+                      <p className="text-sm">
+                        {selectedCandidate.no_of_children || 0}
+                      </p>
+                    </div>
+                    <div className="md:col-span-2">
+                      <Label className="text-sm font-medium">
                         Annual Family Income
                       </Label>
                       <p className="text-sm">
-                        {selectedCandidate.annual_family_income
+                        {selectedCandidate.annual_family_income > 0
                           ? `₹${parseInt(
                               selectedCandidate.annual_family_income
                             ).toLocaleString()}`
-                          : selectedCandidate.annualIncome || "N/A"}
+                          : "N/A"}
                       </p>
                     </div>
                   </CardContent>
                 </Card>
 
-                {/* Documents (if any) */}
+                {/* Address & Location */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Address & Location</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div>
+                      <Label className="text-sm font-medium">Address</Label>
+                      <p className="text-sm whitespace-pre-wrap">
+                        {selectedCandidate.address_line || "N/A"}
+                      </p>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div>
+                        <Label className="text-sm font-medium">State</Label>
+                        <p className="text-sm">
+                          {selectedCandidate.state || "N/A"}
+                        </p>
+                      </div>
+                      <div>
+                        <Label className="text-sm font-medium">District</Label>
+                        <p className="text-sm">
+                          {selectedCandidate.district || "N/A"}
+                        </p>
+                      </div>
+                      <div>
+                        <Label className="text-sm font-medium">Mobilizer</Label>
+                        <div className="flex items-center gap-2">
+                          <p className="text-sm">
+                            {selectedCandidate.mobilizer_name || "N/A"}
+                          </p>
+                          {selectedCandidate.mobilizer_contact && (
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() =>
+                                handleCallCandidate(selectedCandidate)
+                              }
+                            >
+                              <Phone className="h-3 w-3 mr-1" />
+                              Call
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Documents */}
                 <Card>
                   <CardHeader>
                     <CardTitle>Documents</CardTitle>
@@ -712,19 +928,23 @@ export default function OFRManagement() {
                   <CardContent>
                     {selectedCandidate.documents &&
                     selectedCandidate.documents.length > 0 ? (
-                      <ul className="space-y-2">
+                      <div className="space-y-3">
                         {selectedCandidate.documents.map((doc) => (
-                          <li
+                          <div
                             key={doc.documentId || doc.candidate_id}
-                            className="flex items-center justify-between"
+                            className="flex items-center justify-between p-3 border rounded-lg"
                           >
                             <div>
-                              <div className="font-medium">{doc.doc_type}</div>
+                              <div className="font-medium">
+                                {doc.doc_type.toUpperCase()}
+                              </div>
                               <div className="text-sm text-muted-foreground">
                                 Uploaded:{" "}
                                 {doc.uploaded_at
                                   ? new Date(doc.uploaded_at).toLocaleString()
                                   : "N/A"}
+                                <br />
+                                By: {doc.uploaded_by || "N/A"}
                               </div>
                             </div>
                             {doc.file_url ? (
@@ -732,70 +952,84 @@ export default function OFRManagement() {
                                 href={doc.file_url}
                                 target="_blank"
                                 rel="noreferrer"
-                                className="text-primary underline"
+                                className="text-primary underline hover:text-primary/80"
                               >
-                                View
+                                <Eye className="h-4 w-4 inline mr-1" />
+                                View Document
                               </a>
-                            ) : null}
-                          </li>
+                            ) : (
+                              <span className="text-muted-foreground text-sm">
+                                No URL
+                              </span>
+                            )}
+                          </div>
                         ))}
-                      </ul>
+                      </div>
                     ) : (
-                      <p className="text-sm">No documents available.</p>
+                      <p className="text-sm text-muted-foreground">
+                        No documents available.
+                      </p>
                     )}
                   </CardContent>
                 </Card>
 
-                {/* Address */}
+                {/* Status & Metadata */}
                 <Card>
                   <CardHeader>
-                    <CardTitle>Address</CardTitle>
+                    <CardTitle>Status & Metadata</CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    <p className="text-sm">
-                      {selectedCandidate.address_line ||
-                        selectedCandidate.address ||
-                        "N/A"}
-                    </p>
-                    <p className="text-sm mt-2">
-                      {selectedCandidate.district
-                        ? `${selectedCandidate.district}, ${
-                            selectedCandidate.state || ""
-                          }`
-                        : ""}
-                    </p>
-                  </CardContent>
-                </Card>
-
-                {/* Raw Notes & Metadata */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Raw Notes & Metadata</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p>
-                      <strong>Notes:</strong> {selectedCandidate.notes || "N/A"}
-                    </p>
-                    <p>
-                      <strong>Status:</strong>{" "}
-                      {selectedCandidate.status || selectedCandidate.state}
-                    </p>
-                    <p>
-                      <strong>Created At:</strong>{" "}
-                      {selectedCandidate.created_at
-                        ? new Date(
-                            selectedCandidate.created_at
-                          ).toLocaleString()
-                        : "N/A"}
-                    </p>
-                    <p>
-                      <strong>Updated At:</strong>{" "}
-                      {selectedCandidate.updated_at
-                        ? new Date(
-                            selectedCandidate.updated_at
-                          ).toLocaleString()
-                        : "N/A"}
-                    </p>
+                  <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label className="text-sm font-medium">Status</Label>
+                      <p className="text-sm">
+                        <Badge
+                          className={getStatusColor(selectedCandidate.status)}
+                        >
+                          {selectedCandidate.status || "N/A"}
+                        </Badge>
+                      </p>
+                    </div>
+                    <div>
+                      <Label className="text-sm font-medium">Notes</Label>
+                      <p className="text-sm">
+                        {selectedCandidate.notes || "No notes"}
+                      </p>
+                    </div>
+                    <div>
+                      <Label className="text-sm font-medium">Created At</Label>
+                      <p className="text-sm">
+                        {selectedCandidate.created_at
+                          ? new Date(
+                              selectedCandidate.created_at
+                            ).toLocaleString()
+                          : "N/A"}
+                      </p>
+                    </div>
+                    <div>
+                      <Label className="text-sm font-medium">Updated At</Label>
+                      <p className="text-sm">
+                        {selectedCandidate.updated_at
+                          ? new Date(
+                              selectedCandidate.updated_at
+                            ).toLocaleString()
+                          : "N/A"}
+                      </p>
+                    </div>
+                    <div className="md:col-span-2">
+                      <Label className="text-sm font-medium">
+                        Student Reference
+                      </Label>
+                      <p className="text-sm">
+                        {selectedCandidate.student_ref_name ? (
+                          <>
+                            {selectedCandidate.student_ref_name} -{" "}
+                            {selectedCandidate.student_ref_mobile || "N/A"}
+                          </>
+                        ) : (
+                          "N/A"
+                        )}
+                      </p>
+                    </div>
                   </CardContent>
                 </Card>
 
@@ -838,6 +1072,7 @@ export default function OFRManagement() {
                       <Button
                         onClick={handleUpdateStatus}
                         disabled={isUpdating}
+                        className="flex-1"
                       >
                         {isUpdating ? (
                           <>
