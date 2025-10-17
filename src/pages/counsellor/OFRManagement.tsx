@@ -535,7 +535,7 @@ export default function OFRManagement() {
         {/* Candidate Details Dialog */}
         {/* Candidate Details Dialog */}
         <Dialog open={showDetailsDialog} onOpenChange={setShowDetailsDialog}>
-          <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="max-w-7xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>Candidate Details & Verification</DialogTitle>
             </DialogHeader>
@@ -749,7 +749,7 @@ export default function OFRManagement() {
                             Yes - {selectedCandidate.pwd_category || "N/A"}
                           </Badge>
                         ) : (
-                          "No"
+                          <Badge variant="secondary">No</Badge>
                         )}
                       </p>
                     </div>
@@ -871,6 +871,166 @@ export default function OFRManagement() {
                   </CardContent>
                 </Card>
 
+                {/* Health Vitals */}
+                {selectedCandidate.health_vitals &&
+                  selectedCandidate.health_vitals.length > 0 && (
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Health Vitals</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-4">
+                          {selectedCandidate.health_vitals.map(
+                            (vital, index) => (
+                              <div
+                                key={vital.vital_id || index}
+                                className="border rounded-lg p-4"
+                              >
+                                <div className="flex justify-between items-start mb-4">
+                                  <div>
+                                    <h5 className="font-semibold">
+                                      Vital Record #{index + 1}
+                                    </h5>
+                                    <p className="text-sm text-muted-foreground">
+                                      Recorded:{" "}
+                                      {new Date(
+                                        vital.record_date
+                                      ).toLocaleDateString()}
+                                    </p>
+                                  </div>
+                                  {vital.created_at && (
+                                    <p className="text-xs text-muted-foreground">
+                                      Created:{" "}
+                                      {new Date(
+                                        vital.created_at
+                                      ).toLocaleString()}
+                                    </p>
+                                  )}
+                                </div>
+                                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 text-sm">
+                                  <div>
+                                    <Label className="font-medium">
+                                      Height
+                                    </Label>
+                                    <p>{vital.height_cm || "N/A"} cm</p>
+                                  </div>
+                                  <div>
+                                    <Label className="font-medium">
+                                      Weight
+                                    </Label>
+                                    <p>{vital.weight_kg || "N/A"} kg</p>
+                                  </div>
+                                  <div>
+                                    <Label className="font-medium">BMI</Label>
+                                    <p>{vital.bmi || "N/A"}</p>
+                                  </div>
+                                  <div>
+                                    <Label className="font-medium">BP</Label>
+                                    <p>
+                                      {vital.bp_systolic && vital.bp_diastolic
+                                        ? `${vital.bp_systolic}/${vital.bp_diastolic} mmHg`
+                                        : "N/A"}
+                                    </p>
+                                  </div>
+                                  <div>
+                                    <Label className="font-medium">Pulse</Label>
+                                    <p>{vital.pulse_bpm || "N/A"} bpm</p>
+                                  </div>
+                                  <div>
+                                    <Label className="font-medium">
+                                      Fasting Sugar
+                                    </Label>
+                                    <p>
+                                      {vital.blood_sugar_fasting || "N/A"} mg/dL
+                                    </p>
+                                  </div>
+                                  <div>
+                                    <Label className="font-medium">
+                                      PP Sugar
+                                    </Label>
+                                    <p>{vital.blood_sugar_pp || "N/A"} mg/dL</p>
+                                  </div>
+                                  <div>
+                                    <Label className="font-medium">
+                                      Hemoglobin
+                                    </Label>
+                                    <p>{vital.hemoglobin || "N/A"} g/dL</p>
+                                  </div>
+                                </div>
+                                {vital.notes && (
+                                  <div className="mt-3 pt-3 border-t">
+                                    <Label className="font-medium">Notes</Label>
+                                    <p className="text-sm">{vital.notes}</p>
+                                  </div>
+                                )}
+                              </div>
+                            )
+                          )}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  )}
+
+                {/* Health Reports */}
+                {selectedCandidate.health_reports &&
+                  selectedCandidate.health_reports.length > 0 && (
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Health Reports</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-3">
+                          {selectedCandidate.health_reports.map(
+                            (report, index) => (
+                              <div
+                                key={report.report_id || index}
+                                className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50"
+                              >
+                                <div className="flex-1">
+                                  <div className="font-medium">
+                                    {report.report_type}
+                                  </div>
+                                  <div className="text-sm text-muted-foreground">
+                                    Date:{" "}
+                                    {new Date(
+                                      report.report_date
+                                    ).toLocaleDateString()}
+                                  </div>
+                                  {report.description && (
+                                    <div className="text-sm mt-1">
+                                      {report.description}
+                                    </div>
+                                  )}
+                                </div>
+                                {report.file_url ? (
+                                  <a
+                                    href={report.file_url}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="text-primary underline hover:text-primary/80 flex items-center gap-1"
+                                  >
+                                    <Eye className="h-4 w-4" />
+                                    View Report
+                                  </a>
+                                ) : (
+                                  <span className="text-muted-foreground text-sm">
+                                    No file available
+                                  </span>
+                                )}
+                              </div>
+                            )
+                          )}
+                        </div>
+                        {(!selectedCandidate.health_reports ||
+                          selectedCandidate.health_reports.length === 0) && (
+                          <p className="text-sm text-muted-foreground">
+                            No health reports available.
+                          </p>
+                        )}
+                      </CardContent>
+                    </Card>
+                  )}
+
                 {/* Address & Location */}
                 <Card>
                   <CardHeader>
@@ -902,18 +1062,19 @@ export default function OFRManagement() {
                           <p className="text-sm">
                             {selectedCandidate.mobilizer_name || "N/A"}
                           </p>
-                          {selectedCandidate.mobilizer_contact && (
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() =>
-                                handleCallCandidate(selectedCandidate)
-                              }
-                            >
-                              <Phone className="h-3 w-3 mr-1" />
-                              Call
-                            </Button>
-                          )}
+                          {selectedCandidate.mobilizer_contact &&
+                            selectedCandidate.mobilizer_contact !== "+91" && (
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() =>
+                                  handleCallCandidate(selectedCandidate)
+                                }
+                              >
+                                <Phone className="h-3 w-3 mr-1" />
+                                Call
+                              </Button>
+                            )}
                         </div>
                       </div>
                     </div>
@@ -935,8 +1096,8 @@ export default function OFRManagement() {
                             className="flex items-center justify-between p-3 border rounded-lg"
                           >
                             <div>
-                              <div className="font-medium">
-                                {doc.doc_type.toUpperCase()}
+                              <div className="font-medium capitalize">
+                                {doc.doc_type}
                               </div>
                               <div className="text-sm text-muted-foreground">
                                 Uploaded:{" "}
