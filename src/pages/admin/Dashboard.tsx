@@ -1,86 +1,95 @@
-
-import React, { useState } from 'react';
-import { MainLayout } from '@/layouts/MainLayout';
-import { DashboardGrid } from '@/components/dashboard/DashboardGrid';
-import { StatCard } from '@/components/dashboard/StatCard';
-import { ChartCard } from '@/components/dashboard/ChartCard';
-import { FilterBar } from '@/components/common/FilterBar';
-import { Button } from '@/components/ui/button';
-import { motion } from 'framer-motion';
-import { ArrowUpRight, Book, Building, Calendar, ChevronRight, LineChart, Percent, Target, Users } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
-import { KpiAlertForm } from '@/components/forms/KpiAlertForm';
+import React, { useState } from "react";
+import { MainLayout } from "@/layouts/MainLayout";
+import { DashboardGrid } from "@/components/dashboard/DashboardGrid";
+import { StatCard } from "@/components/dashboard/StatCard";
+import { ChartCard } from "@/components/dashboard/ChartCard";
+import { FilterBar } from "@/components/common/FilterBar";
+import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
+import {
+  ArrowUpRight,
+  Book,
+  Building,
+  Calendar,
+  ChevronRight,
+  LineChart,
+  Percent,
+  Target,
+  Users,
+} from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { KpiAlertForm } from "@/components/forms/KpiAlertForm";
 
 const SuperAdminDashboard: React.FC = () => {
   const [kpiAlertOpen, setKpiAlertOpen] = useState(false);
-  
+
   // This would come from API in a real application
   const dashboardData = {
     totalStudents: 12846,
     activeCenters: 148,
     placementRate: 78,
     retentionRate: 82,
-    
+
     // Program data
     programData: [
-      { name: 'UPSDM Program', value: 4862, target: 5000 },
-      { name: 'DDUGKY Program', value: 3215, target: 4000 },
-      { name: 'BSDM Program', value: 2890, target: 3000 },
-      { name: 'PMKVY Program', value: 1879, target: 2500 },
+      { name: "UPSDM Program", value: 4862, target: 5000 },
+      { name: "DDUGKY Program", value: 3215, target: 4000 },
+      { name: "BSDM Program", value: 2890, target: 3000 },
+      { name: "PMKVY Program", value: 1879, target: 2500 },
     ],
-    
+
     // Recent activities
     recentActivities: [
-      { 
-        title: 'New center approved in Bihar',
-        time: '2 hours ago',
-        actor: 'State Manager'
+      {
+        title: "New center approved in Bihar",
+        time: "2 hours ago",
+        actor: "State Manager",
       },
-      { 
-        title: 'Candidate batch completed training',
-        time: '4 hours ago',
-        actor: 'Training Manager'
+      {
+        title: "Candidate batch completed training",
+        time: "4 hours ago",
+        actor: "Training Manager",
       },
-      { 
-        title: 'Placement drive scheduled',
-        time: '8 hours ago',
-        actor: 'Placement Officer'
-      }
+      {
+        title: "Placement drive scheduled",
+        time: "8 hours ago",
+        actor: "Placement Officer",
+      },
     ],
-    
+
     // Placement data
     placementCompanies: [
-      { name: 'TCS', count: 120 },
-      { name: 'Wipro', count: 85 },
-      { name: 'Infosys', count: 65 },
-      { name: 'HCL', count: 52 },
-    ]
+      { name: "TCS", count: 120 },
+      { name: "Wipro", count: 85 },
+      { name: "Infosys", count: 65 },
+      { name: "HCL", count: 52 },
+    ],
   };
-  
+
   const filterOptions = [
     {
-      id: 'date',
-      label: 'Date Range',
-      type: 'date' as const,
+      id: "date",
+      label: "Date Range",
+      type: "date" as const,
     },
     {
-      id: 'state',
-      label: 'State',
-      type: 'select' as const,
+      id: "state",
+      label: "State",
+      type: "select" as const,
       options: [
-        { value: 'maharashtra', label: 'Maharashtra' },
-        { value: 'gujarat', label: 'Gujarat' },
-        { value: 'karnataka', label: 'Karnataka' },
+        { value: "maharashtra", label: "Maharashtra" },
+        { value: "gujarat", label: "Gujarat" },
+        { value: "karnataka", label: "Karnataka" },
       ],
     },
     {
-      id: 'jobRole',
-      label: 'Job Role',
-      type: 'select' as const,
+      id: "jobRole",
+      label: "Job Role",
+      type: "select" as const,
       options: [
-        { value: 'healthcare', label: 'Health Care' },
-        { value: 'retail', label: 'Retail' },
-        { value: 'hospitality', label: 'Hospitality' },
+        { value: "healthcare", label: "Health Care" },
+        { value: "retail", label: "Retail" },
+        { value: "hospitality", label: "Hospitality" },
       ],
     },
   ];
@@ -91,9 +100,9 @@ const SuperAdminDashboard: React.FC = () => {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1
-      }
-    }
+        staggerChildren: 0.1,
+      },
+    },
   };
 
   const itemVariants = {
@@ -104,9 +113,9 @@ const SuperAdminDashboard: React.FC = () => {
       transition: {
         type: "spring",
         stiffness: 300,
-        damping: 24
-      }
-    }
+        damping: 24,
+      },
+    },
   };
 
   return (
@@ -123,7 +132,7 @@ const SuperAdminDashboard: React.FC = () => {
             Overview of skills development platform metrics.
           </p>
         </motion.div>
-        
+
         <motion.div variants={itemVariants}>
           <FilterBar
             filters={filterOptions}
@@ -178,35 +187,44 @@ const SuperAdminDashboard: React.FC = () => {
           </DashboardGrid>
 
           <motion.div variants={itemVariants}>
-            <h2 className="text-xl font-semibold mt-8 mb-4">Program Performance</h2>
+            <h2 className="text-xl font-semibold mt-8 mb-4">
+              Program Performance
+            </h2>
           </motion.div>
-          
+
           {/* Program Performance Cards */}
           <DashboardGrid>
             {dashboardData.programData.map((program, index) => (
-              <motion.div 
+              <motion.div
                 key={program.name}
                 variants={itemVariants}
                 custom={index}
                 className="bg-white rounded-lg shadow-sm border border-neutral-100 p-5 hover:shadow-md transition-shadow duration-300"
               >
                 <div className="mb-3">
-                  <div className="text-sm text-gray-600 font-medium">{program.name}</div>
+                  <div className="text-sm text-gray-600 font-medium">
+                    {program.name}
+                  </div>
                   <div className="flex items-center justify-between mt-1">
                     <div className="text-2xl font-bold">{program.value}</div>
-                    <div className="text-sm font-medium text-gray-500 bg-neutral-50 px-2 py-1 rounded-md">Target: {program.target}</div>
+                    <div className="text-sm font-medium text-gray-500 bg-neutral-50 px-2 py-1 rounded-md">
+                      Target: {program.target}
+                    </div>
                   </div>
                 </div>
                 <div className="relative w-full bg-gray-100 rounded-full h-2.5 overflow-hidden">
-                  <motion.div 
-                    className="h-full bg-purple-600 rounded-full" 
+                  <motion.div
+                    className="h-full bg-purple-600 rounded-full"
                     initial={{ width: 0 }}
-                    animate={{ width: `${(program.value / program.target) * 100}%` }}
+                    animate={{
+                      width: `${(program.value / program.target) * 100}%`,
+                    }}
                     transition={{ delay: 0.2, duration: 1, ease: "easeOut" }}
                   ></motion.div>
                 </div>
                 <div className="mt-2 text-xs text-right text-gray-500">
-                  {Math.round((program.value / program.target) * 100)}% completed
+                  {Math.round((program.value / program.target) * 100)}%
+                  completed
                 </div>
               </motion.div>
             ))}
@@ -222,7 +240,7 @@ const SuperAdminDashboard: React.FC = () => {
               >
                 <div className="mt-4">
                   {dashboardData.recentActivities.map((activity, index) => (
-                    <motion.div 
+                    <motion.div
                       key={index}
                       initial={{ x: -20, opacity: 0 }}
                       animate={{ x: 0, opacity: 1 }}
@@ -250,7 +268,7 @@ const SuperAdminDashboard: React.FC = () => {
                 </div>
               </ChartCard>
             </motion.div>
-            
+
             <motion.div variants={itemVariants}>
               <ChartCard
                 title="Placement Overview"
@@ -259,8 +277,8 @@ const SuperAdminDashboard: React.FC = () => {
               >
                 <div className="mt-4 space-y-3">
                   {dashboardData.placementCompanies.map((company, index) => (
-                    <motion.div 
-                      key={company.name} 
+                    <motion.div
+                      key={company.name}
                       className="space-y-1"
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -271,14 +289,19 @@ const SuperAdminDashboard: React.FC = () => {
                           <span className="inline-block w-2 h-2 rounded-full bg-purple-500 mr-1"></span>
                           {company.name}
                         </span>
-                        <span className="text-sm">{company.count} placements</span>
+                        <span className="text-sm">
+                          {company.count} placements
+                        </span>
                       </div>
                       <div className="w-full bg-gray-100 rounded-full h-2">
-                        <motion.div 
-                          className="bg-purple-600 h-2 rounded-full" 
+                        <motion.div
+                          className="bg-purple-600 h-2 rounded-full"
                           initial={{ width: 0 }}
                           animate={{ width: `${(company.count / 120) * 100}%` }}
-                          transition={{ duration: 0.8, delay: 0.2 + (0.1 * index) }}
+                          transition={{
+                            duration: 0.8,
+                            delay: 0.2 + 0.1 * index,
+                          }}
                         ></motion.div>
                       </div>
                     </motion.div>
@@ -290,8 +313,12 @@ const SuperAdminDashboard: React.FC = () => {
                         <LineChart className="h-5 w-5 text-green-700" />
                       </div>
                       <div>
-                        <div className="text-green-800 font-medium">Placement target exceeded</div>
-                        <div className="text-green-700 text-sm">We've achieved 105% of this month's target</div>
+                        <div className="text-green-800 font-medium">
+                          Placement target exceeded
+                        </div>
+                        <div className="text-green-700 text-sm">
+                          We've achieved 105% of this month's target
+                        </div>
                       </div>
                     </CardContent>
                   </Card>

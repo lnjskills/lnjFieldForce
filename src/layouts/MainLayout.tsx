@@ -122,7 +122,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
                         ? "Administration Department"
                         : formatRoleDisplay(role)}
                     </div>
-                    <div className="text-sm text-indigo-200">Maharashtra</div>
+                    <div className="text-sm text-indigo-200"></div>
                   </div>
                 </div>
               </div>

@@ -26,8 +26,9 @@ export const apiSlice = createApi({
       return headers;
     },
   }),
-  tagTypes: ["User", "Candidates", "Mobilizers"],
+  tagTypes: ["User", "Center", "Candidates", "Mobilizers", "Centers"],
   endpoints: (builder) => ({
+    // Auth
     login: builder.mutation({
       query: (credentials) => ({
         url: "/auth/role/login",
@@ -36,19 +37,13 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ["User"],
     }),
+
+    // Candidates
     getCandidatesList: builder.query({
       query: () => ({
         url: "/candidates/candidate/list",
         method: "GET",
       }),
-      providesTags: ["Candidates"],
-    }),
-    getMobilizerList: builder.query({
-      query: () => "/counsellor/manager/list",
-      providesTags: ["Mobilizers"],
-    }),
-    getMobiliserCandidateList: builder.query({
-      query: (id) => `/counsellor/candidate/list/${id}`,
       providesTags: ["Candidates"],
     }),
     getCandidateDetails: builder.query({
@@ -63,14 +58,123 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ["Candidates"],
     }),
+
+    // Mobilizers
+    // getMobilizerList: builder.query({
+    //   query: () => "/counsellor/manager/list",
+    //   providesTags: ["Mobilizers"],
+    // }),
+    searchMobilizers: builder.mutation({
+      query: (searchTerm: string) => ({
+        url: "/counsellor/manager/list",
+        method: "POST",
+        body: { search: searchTerm },
+      }),
+      invalidatesTags: ["Mobilizers"], // Invalidate cache to refresh mobilizer list
+    }),
+    getMobiliserCandidateList: builder.query({
+      query: (id) => `/counsellor/candidate/list/${id}`,
+      providesTags: ["Candidates"],
+    }),
+
+    // Centers (for Assigned Center dropdown)
+    getCentersList: builder.query({
+      query: () => ({
+        url: "/admin/centre/list",
+        method: "GET",
+      }),
+      providesTags: ["Centers"],
+    }),
+
+    // Users: list, detail, add, delete
+    getUsersList: builder.query({
+      query: () => ({
+        url: "/admin/user/list",
+        method: "GET",
+      }),
+      providesTags: (result: Array<{ id: number }> | undefined) =>
+        Array.isArray(result) && result.length
+          ? [
+              ...result.map((user) => ({
+                type: "User" as const,
+                id: user.id,
+              })),
+              { type: "User" as const, id: "LIST" },
+            ]
+          : [{ type: "User" as const, id: "LIST" }],
+    }),
+
+    getUserDetail: builder.query({
+      query: (id) => ({
+        url: `/admin/user/detail/${id}`,
+        method: "GET",
+      }),
+      providesTags: (result, error, id) => [{ type: "User" as const, id }],
+    }),
+
+    addUser: builder.mutation({
+      query: (user) => ({
+        url: "/admin/user/add",
+        method: "POST",
+        body: user,
+      }),
+      invalidatesTags: [{ type: "User", id: "LIST" }],
+    }),
+
+    deleteUser: builder.mutation({
+      query: (id) => ({
+        url: `/admin/user/delete/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: (result, error, id) => [
+        { type: "User", id },
+        { type: "User", id: "LIST" },
+      ],
+    }),
+    // add get detai and delete for center
+
+    getCenterDetail: builder.query({
+      query: (id) => ({
+        url: `/admin/user/detail/${id}`,
+        method: "GET",
+      }),
+      providesTags: (result, error, id) => [{ type: "User" as const, id }],
+    }),
+
+    addCenter: builder.mutation({
+      query: (center) => ({
+        url: "/admin/centre/add",
+        method: "POST",
+        body: center,
+      }),
+      invalidatesTags: [{ type: "Center", id: "LIST" }],
+    }),
+
+    deleteCenter: builder.mutation({
+      query: (id) => ({
+        url: `/admin/user/delete/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: (result, error, id) => [
+        { type: "User", id },
+        { type: "User", id: "LIST" },
+      ],
+    }),
   }),
 });
 
 export const {
   useLoginMutation,
   useGetCandidatesListQuery,
-  useGetMobilizerListQuery,
+  useSearchMobilizersMutation,
+  // useGetMobilizerListQuery,
   useGetMobiliserCandidateListQuery,
   useGetCandidateDetailsQuery,
   useUpdateCandidateStatusMutation,
+  useGetCentersListQuery,
+  useGetUsersListQuery,
+  useGetUserDetailQuery,
+  useAddUserMutation,
+  useDeleteUserMutation,
+  useAddCenterMutation,
 } = apiSlice;

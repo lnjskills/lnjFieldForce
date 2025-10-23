@@ -40,11 +40,116 @@ import {
   MapPin,
 } from "lucide-react";
 import {
-  useGetMobilizerListQuery,
+  useSearchMobilizersMutation,
   useGetMobiliserCandidateListQuery,
   useGetCandidateDetailsQuery,
   useUpdateCandidateStatusMutation,
 } from "@/store/slices/apiSlice";
+
+// Define interfaces locally
+interface Mobilizer {
+  id?: number | string;
+  name?: string;
+  role?: string;
+  state?: string | null;
+  ofrCount?: number;
+}
+
+interface SearchMobilizersResponse {
+  success: boolean;
+  data: Mobilizer[];
+  count?: number;
+  message?: string;
+}
+
+interface Candidate {
+  name: string;
+  mobile: number;
+  fatherName: string;
+  state: string;
+  id: number | string;
+  salutation?: string;
+  first_name: string;
+  middle_name?: string;
+  last_name?: string;
+  father_first_name?: string;
+  father_last_name?: string;
+  mobile1: string;
+  mobile2?: string;
+  district?: string;
+  status?: string;
+  notes?: string;
+  primary_email?: string;
+  blood_group?: string;
+  mother_tongue?: string;
+  religion?: string;
+  community?: string;
+  mother_name?: string;
+  guardian_name?: string;
+  marital_status?: string;
+  spouse_name?: string;
+  annual_family_income?: string;
+  address_line?: string;
+  mobilizer_name?: string;
+  project?: string;
+  center_code?: string;
+  created_at?: string;
+  updated_at?: string;
+  photo_url?: string;
+  aadhar_no?: string;
+  bank_acct?: string;
+  region_id?: string;
+  pre_training?: string;
+  emergency_contact?: string;
+  emergency_relation?: string;
+  created_by?: string;
+  gender?: string;
+  dob?: string;
+  category?: string;
+  special_group?: string;
+  special_group_category?: string;
+  pwd?: string;
+  pwd_category?: string;
+  father_occupation?: string;
+  mother_occupation?: string;
+  guardian_type?: string;
+  spouse_dob?: string;
+  anniversary_date?: string;
+  no_of_children?: number;
+  student_ref_name?: string;
+  student_ref_mobile?: string;
+  mobilizer_contact?: string;
+  health_vitals?: Array<{
+    vital_id?: string;
+    record_date: string;
+    height_cm?: number;
+    weight_kg?: number;
+    bmi?: number;
+    bp_systolic?: number;
+    bp_diastolic?: number;
+    pulse_bpm?: number;
+    blood_sugar_fasting?: number;
+    blood_sugar_pp?: number;
+    hemoglobin?: number;
+    notes?: string;
+    created_at?: string;
+  }>;
+  health_reports?: Array<{
+    report_id?: string;
+    report_type: string;
+    report_date: string;
+    description?: string;
+    file_url?: string;
+  }>;
+  documents?: Array<{
+    documentId?: string;
+    candidate_id?: string;
+    doc_type: string;
+    uploaded_at?: string;
+    uploaded_by?: string;
+    file_url?: string;
+  }>;
+}
 
 const candidateStatuses = [
   "Ready for Migration",
@@ -60,33 +165,46 @@ const candidateStatuses = [
   "IN_TRAINING",
   "TRAINED",
   "PLACED",
-  "DROPPED ",
+  "DROPPED",
 ];
 
 export default function OFRManagement() {
   // State management
+  const initialSearchTerm =
+    typeof window !== "undefined" && localStorage.getItem("user")
+      ? (() => {
+          try {
+            const u = JSON.parse(localStorage.getItem("user") as string);
+            return (u && u.state) || "";
+          } catch {
+            return "";
+          }
+        })()
+      : "";
   const [selectedDistrict, setSelectedDistrict] = useState("");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [pulledCandidates, setPulledCandidates] = useState([]);
+  const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
+  const [pulledCandidates, setPulledCandidates] = useState<Candidate[]>([]);
   const [showCandidatesDialog, setShowCandidatesDialog] = useState(false);
-  const [selectedCandidate, setSelectedCandidate] = useState(null);
+  const [selectedCandidate, setSelectedCandidate] = useState<Candidate | null>(
+    null
+  );
   const [showDetailsDialog, setShowDetailsDialog] = useState(false);
   const [counsellingNotes, setCounsellingNotes] = useState("");
   const [newStatus, setNewStatus] = useState("");
-  const [currentMobilizer, setCurrentMobilizer] = useState(null);
+  const [currentMobilizer, setCurrentMobilizer] = useState<Mobilizer | null>(
+    null
+  );
   const { toast } = useToast();
 
   // API hooks
-  const {
-    data: mobilizerData,
-    isLoading: mobilizerLoading,
-    error: mobilizerError,
-    refetch: refetchMobilizers,
-  } = useGetMobilizerListQuery(undefined);
-
-  const [updateCandidateStatus, { isLoading: isUpdating }] =
-    useUpdateCandidateStatusMutation();
-  const [selectedMobilizerId, setSelectedMobilizerId] = useState(null);
+  const [
+    searchMobilizers,
+    { data: mobilizerData, isLoading: mobilizerLoading, error: mobilizerError },
+  ] = useSearchMobilizersMutation();
+  const [selectedMobilizerId, setSelectedMobilizerId] = useState<
+    number | string | null
+  >(null);
+  console.log(mobilizerData, "mobilizer data");
 
   const {
     data: candidateData,
@@ -95,12 +213,9 @@ export default function OFRManagement() {
   } = useGetMobiliserCandidateListQuery(selectedMobilizerId, {
     skip: !selectedMobilizerId,
   });
-
-  // Candidate details via RTK Query (uses apiSlice baseUrl + auth headers)
-  const [selectedCandidateId, setSelectedCandidateId] = useState<number | null>(
-    null
-  );
-
+  const [selectedCandidateId, setSelectedCandidateId] = useState<
+    number | string | null
+  >(null);
   const {
     data: candidateDetailsData,
     isLoading: candidateDetailsLoading,
@@ -108,36 +223,39 @@ export default function OFRManagement() {
   } = useGetCandidateDetailsQuery(selectedCandidateId, {
     skip: !selectedCandidateId,
   });
-  console.log(candidateDetailsData, "candidate details");
+  const [updateCandidateStatus, { isLoading: isUpdating }] =
+    useUpdateCandidateStatusMutation();
 
+  // Trigger search on mount or when searchTerm/selectedDistrict changes
   useEffect(() => {
-    if (candidateDetailsData) {
-      setSelectedCandidate(candidateDetailsData);
-      setNewStatus(candidateDetailsData.status || "");
-      setCounsellingNotes(candidateDetailsData.notes || "");
+    async function fetchMobilizers() {
+      try {
+        const response = (await searchMobilizers(
+          searchTerm
+        ).unwrap()) as SearchMobilizersResponse;
+        console.log("Mobilizer search response:", response);
+        // API uses `success` rather than `ok` so check that property.
+        if (!response || !response.success) {
+          throw new Error(response?.message || "Failed to fetch mobilizers");
+        }
+      } catch (err) {
+        console.error("Search mobilizers error:", err);
+        toast({
+          title: "Error",
+          description:
+            err.message || "Failed to fetch mobilizers. Please try again.",
+          variant: "destructive",
+        });
+      }
     }
+    fetchMobilizers();
+  }, [searchTerm, selectedDistrict, searchMobilizers, toast]);
 
-    if (candidateDetailsError) {
-      toast({
-        title: "Error",
-        description: "Failed to fetch candidate details. Please try again.",
-        variant: "destructive",
-      });
-      setShowDetailsDialog(false);
-    }
-  }, [candidateDetailsData, candidateDetailsError, toast]);
-  // Derived data
-  type Mobilizer = {
-    id?: number | string;
-    name?: string;
-    role?: string;
-    state?: string | null;
-    ofrCount?: number;
-  };
-
-  const mobilizerList: Mobilizer[] = Array.isArray(mobilizerData?.data)
-    ? (mobilizerData.data as Mobilizer[])
-    : [];
+  // Process mobilizer data
+  const mobilizerList: Mobilizer[] =
+    mobilizerData?.success && Array.isArray(mobilizerData.data)
+      ? mobilizerData.data
+      : [];
 
   const districts: string[] = mobilizerList.length
     ? Array.from(
@@ -152,18 +270,36 @@ export default function OFRManagement() {
   const filteredMobilizers = mobilizerList.filter((mobilizer) => {
     const matchesDistrict =
       !selectedDistrict || (mobilizer.state || "") === selectedDistrict;
+    const normalizedSearch = (searchTerm || "").toString().trim().toLowerCase();
     const matchesSearch =
-      !searchTerm ||
-      (mobilizer.name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (mobilizer.role || "").toLowerCase().includes(searchTerm.toLowerCase());
+      !normalizedSearch ||
+      (mobilizer.name || "").toLowerCase().includes(normalizedSearch) ||
+      (mobilizer.role || "").toLowerCase().includes(normalizedSearch) ||
+      (mobilizer.state || "").toLowerCase().includes(normalizedSearch);
     return matchesDistrict && matchesSearch;
   });
-  console.log(filteredMobilizers, "filteredMobilizers");
 
-  // Process candidate data from API
+  // Process candidate details
+  useEffect(() => {
+    if (candidateDetailsData) {
+      setSelectedCandidate(candidateDetailsData);
+      setNewStatus(candidateDetailsData.status || "");
+      setCounsellingNotes(candidateDetailsData.notes || "");
+    }
+    if (candidateDetailsError) {
+      toast({
+        title: "Error",
+        description: "Failed to fetch candidate details. Please try again.",
+        variant: "destructive",
+      });
+      setShowDetailsDialog(false);
+    }
+  }, [candidateDetailsData, candidateDetailsError, toast]);
+
+  // Process candidate data
   useEffect(() => {
     if (candidateData?.data && currentMobilizer) {
-      const candidates = candidateData.data.map((candidate) => ({
+      const candidates = candidateData.data.map((candidate: Candidate) => ({
         id: candidate.id,
         name: `${candidate.salutation || ""} ${candidate.first_name} ${
           candidate.middle_name || ""
@@ -200,7 +336,6 @@ export default function OFRManagement() {
         description: `Pulled ${candidates.length} candidate OFRs from ${currentMobilizer.name}`,
       });
     }
-
     if (candidateError) {
       toast({
         title: "Error",
@@ -212,7 +347,7 @@ export default function OFRManagement() {
   }, [candidateData, candidateError, currentMobilizer, toast]);
 
   // Handler functions
-  const handlePullOFRs = (mobilizer) => {
+  const handlePullOFRs = (mobilizer: Mobilizer) => {
     setCurrentMobilizer(mobilizer);
     setSelectedMobilizerId(mobilizer.id);
     setShowCandidatesDialog(true);
@@ -220,19 +355,19 @@ export default function OFRManagement() {
 
   const handleReset = () => {
     setSelectedDistrict("");
-    setSearchTerm("");
+    setSearchTerm(initialSearchTerm || "");
     setSelectedMobilizerId(null);
     setPulledCandidates([]);
   };
 
-  const handleCallCandidate = (candidate) => {
+  const handleCallCandidate = (candidate: Candidate) => {
     toast({
       title: "Calling Candidate",
       description: `Initiating call to ${candidate.name} (${candidate.mobile})`,
     });
   };
 
-  const handleViewDetails = (candidate) => {
+  const handleViewDetails = (candidate: Candidate) => {
     if (!candidate?.id) {
       toast({
         title: "Invalid Candidate",
@@ -241,10 +376,7 @@ export default function OFRManagement() {
       });
       return;
     }
-
-    // Trigger RTK Query to fetch candidate details (caching + auth headers handled by apiSlice)
     setSelectedCandidateId(candidate.id);
-    // clear any previous selection while the new one is loading
     setSelectedCandidate(null);
     setShowDetailsDialog(true);
   };
@@ -258,8 +390,10 @@ export default function OFRManagement() {
       });
       return;
     }
-
-    if (!selectedCandidate?.id || isNaN(parseInt(selectedCandidate.id))) {
+    if (
+      !selectedCandidate?.id ||
+      isNaN(parseInt(selectedCandidate.id as string))
+    ) {
       toast({
         title: "Invalid Candidate",
         description: "Selected candidate ID is invalid.",
@@ -270,16 +404,12 @@ export default function OFRManagement() {
 
     try {
       const payload = {
-        id: parseInt(selectedCandidate.id),
+        id: parseInt(selectedCandidate.id as string),
         status: newStatus,
-        notes: counsellingNotes || "", // Ensure notes is a string, even if empty
+        notes: counsellingNotes || "",
       };
 
-      console.log("Updating candidate status with payload:", payload); // Debug log
-
       const response = await updateCandidateStatus(payload).unwrap();
-
-      // Update local state to reflect changes
       const updatedPulledCandidates = pulledCandidates.map((c) =>
         c.id === selectedCandidate.id
           ? { ...c, status: newStatus, counsellingNotes }
@@ -291,29 +421,30 @@ export default function OFRManagement() {
         title: "Status Updated Successfully",
         description: `${selectedCandidate.name}'s status updated to "${newStatus}"`,
       });
-
       setShowDetailsDialog(false);
       setCounsellingNotes("");
       setNewStatus("");
-    } catch (error) {
-      console.error("Update error:", {
-        status: error.status,
-        data: error.data,
-        message: error.data?.message,
-        error: error.error,
-      });
+    } catch (e: unknown) {
+      console.error("Update error:", e);
+      type RTKError = {
+        data?: { message?: string };
+        error?: string;
+        message?: string;
+      };
+      const err = e as RTKError;
       toast({
         title: "Update Failed",
         description:
-          error.data?.message ||
-          error.error ||
+          err.data?.message ||
+          err.error ||
+          err.message ||
           "Failed to update candidate status. Please try again.",
         variant: "destructive",
       });
     }
   };
 
-  const getStatusColor = (status) => {
+  const getStatusColor = (status: string) => {
     const statusColors = {
       "Ready for Migration": "bg-green-100 text-green-800",
       "Not Interested": "bg-red-100 text-red-800",
@@ -378,7 +509,7 @@ export default function OFRManagement() {
                 <Label htmlFor="search">Search Mobilizer</Label>
                 <Input
                   id="search"
-                  placeholder="Search by name or type..."
+                  placeholder="Search by name or state..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
@@ -433,14 +564,6 @@ export default function OFRManagement() {
                         </div>
                       </div>
                       <div className="flex items-center gap-4">
-                        {/* <div className="text-center">
-                          <div className="text-2xl font-bold text-primary">
-                            {mobilizer.ofrCount || 0}
-                          </div>
-                          <div className="text-xs text-muted-foreground">
-                            OFRs Available
-                          </div>
-                        </div> */}
                         <Button
                           onClick={() => handlePullOFRs(mobilizer)}
                           disabled={candidateLoading}
@@ -532,7 +655,6 @@ export default function OFRManagement() {
           </DialogContent>
         </Dialog>
 
-        {/* Candidate Details Dialog */}
         {/* Candidate Details Dialog */}
         <Dialog open={showDetailsDialog} onOpenChange={setShowDetailsDialog}>
           <DialogContent className="max-w-7xl max-h-[90vh] overflow-y-auto">
@@ -861,7 +983,7 @@ export default function OFRManagement() {
                         Annual Family Income
                       </Label>
                       <p className="text-sm">
-                        {selectedCandidate.annual_family_income > 0
+                        {selectedCandidate.annual_family_income
                           ? `₹${parseInt(
                               selectedCandidate.annual_family_income
                             ).toLocaleString()}`

@@ -25,6 +25,7 @@ const authSlice = createSlice({
       if (isClient) {
         localStorage.setItem("accessToken", action.payload.token);
         localStorage.setItem("userRole", action.payload.role);
+        localStorage.setItem("user", JSON.stringify(action.payload.user));
         localStorage.setItem(
           "permissions",
           JSON.stringify(action.payload.permissions || {})
@@ -42,6 +43,7 @@ const authSlice = createSlice({
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
         localStorage.removeItem("userRole");
+        localStorage.removeItem("user");
         localStorage.removeItem("permissions");
       }
     },
@@ -52,11 +54,14 @@ const authSlice = createSlice({
         const permissions = JSON.parse(
           localStorage.getItem("permissions") || "{}"
         );
+        const userStr = localStorage.getItem("user");
+        const user = userStr ? JSON.parse(userStr) : null;
 
         if (token) {
           state.token = token;
           state.role = role;
           state.permissions = permissions;
+          state.user = user;
           state.isAuthenticated = true;
         }
       }

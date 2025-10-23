@@ -172,676 +172,699 @@ const App = () => {
           <Toaster />
           <Sonner />
           <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Index />} />
+            <Suspense fallback={<div className="p-4">Loading...</div>}>
+              <Routes>
+                <Route path="/" element={<Index />} />
 
-              {/* Admin Panel Routes */}
-              <Route
-                path="/admin/dashboard"
-                element={<SuperAdminDashboard />}
-              />
-              <Route path="/admin/users" element={<UserManagement />} />
-              <Route
-                path="/admin/master-data"
-                element={<MasterDataManagement />}
-              />
-              <Route path="/admin/documents" element={<DocumentGenerator />} />
-              <Route path="/admin/batches" element={<BatchManagement />} />
-              <Route
-                path="/admin/candidates"
-                element={<CandidateDirectory />}
-              />
-              <Route path="/admin/reports" element={<ReportsAnalytics />} />
-              <Route path="/admin/videos" element={<VideoLogManager />} />
-              <Route path="/admin/ai-dropout" element={<AIDropoutEngine />} />
-              <Route path="/admin/quality" element={<QualityTracker />} />
-              <Route path="/admin/sos" element={<SosEscalationTracker />} />
-              <Route path="/admin/export" element={<DataExportHub />} />
-              <Route path="/admin/settings" element={<SystemSettings />} />
+                {/* Admin Panel Routes */}
+                <Route
+                  path="/admin/dashboard"
+                  element={<SuperAdminDashboard />}
+                />
+                <Route path="/admin/users" element={<UserManagement />} />
+                <Route
+                  path="/admin/master-data"
+                  element={<MasterDataManagement />}
+                />
+                <Route
+                  path="/admin/documents"
+                  element={<DocumentGenerator />}
+                />
+                <Route path="/admin/batches" element={<BatchManagement />} />
+                <Route
+                  path="/admin/candidates"
+                  element={<CandidateDirectory />}
+                />
+                <Route path="/admin/reports" element={<ReportsAnalytics />} />
+                <Route path="/admin/videos" element={<VideoLogManager />} />
+                <Route path="/admin/ai-dropout" element={<AIDropoutEngine />} />
+                <Route path="/admin/quality" element={<QualityTracker />} />
+                <Route path="/admin/sos" element={<SosEscalationTracker />} />
+                <Route path="/admin/export" element={<DataExportHub />} />
+                <Route path="/admin/settings" element={<SystemSettings />} />
 
-              {/* State Head Routes */}
-              <Route
-                path="/state-head/dashboard"
-                element={<StateHeadDashboard />}
-              />
-              <Route
-                path="/state-head/state-overview"
-                element={<StateOverview />}
-              />
-              <Route
-                path="/state-head/center-performance"
-                element={<CenterPerformance />}
-              />
-              <Route
-                path="/state-head/trainer-summary"
-                element={<TrainerSummary />}
-              />
-              <Route path="/state-head/reports" element={<Reports />} />
-              <Route path="/state-head/attendance" element={<Attendance />} />
-              <Route
-                path="/state-head/dropout-insights"
-                element={<DropoutInsights />}
-              />
-              <Route
-                path="/state-head/ppc-schedule"
-                element={<PPCScheduleMonitor />}
-              />
-              <Route
-                path="/state-head/batch-tracker"
-                element={<BatchTracker />}
-              />
-              <Route path="/state-head/sos-tracker" element={<SOSTracker />} />
-              <Route
-                path="/state-head/export-reports"
-                element={<ExportReports />}
-              />
+                {/* State Head Routes */}
+                <Route
+                  path="/state-head/dashboard"
+                  element={<StateHeadDashboard />}
+                />
+                <Route
+                  path="/state-head/state-overview"
+                  element={<StateOverview />}
+                />
+                <Route
+                  path="/state-head/center-performance"
+                  element={<CenterPerformance />}
+                />
+                <Route
+                  path="/state-head/trainer-summary"
+                  element={<TrainerSummary />}
+                />
+                <Route path="/state-head/reports" element={<Reports />} />
+                <Route path="/state-head/attendance" element={<Attendance />} />
+                <Route
+                  path="/state-head/dropout-insights"
+                  element={<DropoutInsights />}
+                />
+                <Route
+                  path="/state-head/ppc-schedule"
+                  element={<PPCScheduleMonitor />}
+                />
+                <Route
+                  path="/state-head/batch-tracker"
+                  element={<BatchTracker />}
+                />
+                <Route
+                  path="/state-head/sos-tracker"
+                  element={<SOSTracker />}
+                />
+                <Route
+                  path="/state-head/export-reports"
+                  element={<ExportReports />}
+                />
 
-              {/* Mobilizer App Routes */}
-              <Route
-                path="/mobilizer/new"
-                element={<MobilizerNewCandidate />}
-              />
+                {/* Mobilizer App Routes */}
+                <Route
+                  path="/mobilizer/new"
+                  element={<MobilizerNewCandidate />}
+                />
 
-              {/* Candidate App Routes */}
-              <Route
-                path="/candidate"
-                element={
-                  <MainLayout role="candidate" title="Dashboard">
-                    <CandidateHome />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/candidate/profile"
-                element={
-                  <MainLayout role="candidate" title="My Profile">
-                    <CandidateProfile />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/candidate/progress"
-                element={
-                  <MainLayout role="candidate" title="Training Progress">
-                    <CandidateProgress />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/candidate/attendance"
-                element={
-                  <MainLayout role="candidate" title="My Attendance">
-                    <CandidateAttendance />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/candidate/documents"
-                element={
-                  <MainLayout role="candidate" title="My Documents">
-                    <CandidateDocuments />
-                  </MainLayout>
-                }
-              />
+                {/* Candidate App Routes */}
+                <Route
+                  path="/candidate"
+                  element={
+                    <MainLayout role="candidate" title="Dashboard">
+                      <CandidateHome />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path="/candidate/profile"
+                  element={
+                    <MainLayout role="candidate" title="My Profile">
+                      <CandidateProfile />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path="/candidate/progress"
+                  element={
+                    <MainLayout role="candidate" title="Training Progress">
+                      <CandidateProgress />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path="/candidate/attendance"
+                  element={
+                    <MainLayout role="candidate" title="My Attendance">
+                      <CandidateAttendance />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path="/candidate/documents"
+                  element={
+                    <MainLayout role="candidate" title="My Documents">
+                      <CandidateDocuments />
+                    </MainLayout>
+                  }
+                />
 
-              {/* Trainer Routes */}
-              <Route
-                path="/trainer"
-                element={
-                  <MainLayout role="trainer" title="Dashboard">
-                    <TrainerDashboard />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/trainer/curriculum-planner"
-                element={
-                  <MainLayout role="trainer" title="Curriculum Planner">
-                    <TrainerCurriculumPlanner />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/trainer/attendance-management"
-                element={
-                  <MainLayout role="trainer" title="Attendance Management">
-                    <TrainerAttendanceManagement />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/trainer/video-logs"
-                element={
-                  <MainLayout role="trainer" title="Video Logs">
-                    <TrainerVideoLogs />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/trainer/assessment-evaluation"
-                element={
-                  <MainLayout role="trainer" title="Assessment Evaluation">
-                    <TrainerAssessmentEvaluation />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/trainer/feedback-management"
-                element={
-                  <MainLayout role="trainer" title="Feedback Management">
-                    <TrainerFeedbackManagement />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/trainer/curriculum-schedule"
-                element={
-                  <MainLayout role="trainer" title="Curriculum Schedule">
-                    <CurriculumSchedule />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/trainer/reports"
-                element={
-                  <MainLayout role="trainer" title="Reports & Analytics">
-                    <TrainerReports />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/trainer/profile"
-                element={
-                  <MainLayout role="trainer" title="Profile & Settings">
-                    <TrainerProfile />
-                  </MainLayout>
-                }
-              />
+                {/* Trainer Routes */}
+                <Route
+                  path="/trainer"
+                  element={
+                    <MainLayout role="trainer" title="Dashboard">
+                      <TrainerDashboard />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path="/trainer/curriculum-planner"
+                  element={
+                    <MainLayout role="trainer" title="Curriculum Planner">
+                      <TrainerCurriculumPlanner />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path="/trainer/attendance-management"
+                  element={
+                    <MainLayout role="trainer" title="Attendance Management">
+                      <TrainerAttendanceManagement />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path="/trainer/video-logs"
+                  element={
+                    <MainLayout role="trainer" title="Video Logs">
+                      <TrainerVideoLogs />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path="/trainer/assessment-evaluation"
+                  element={
+                    <MainLayout role="trainer" title="Assessment Evaluation">
+                      <TrainerAssessmentEvaluation />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path="/trainer/feedback-management"
+                  element={
+                    <MainLayout role="trainer" title="Feedback Management">
+                      <TrainerFeedbackManagement />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path="/trainer/curriculum-schedule"
+                  element={
+                    <MainLayout role="trainer" title="Curriculum Schedule">
+                      <CurriculumSchedule />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path="/trainer/reports"
+                  element={
+                    <MainLayout role="trainer" title="Reports & Analytics">
+                      <TrainerReports />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path="/trainer/profile"
+                  element={
+                    <MainLayout role="trainer" title="Profile & Settings">
+                      <TrainerProfile />
+                    </MainLayout>
+                  }
+                />
 
-              {/* Counsellor Routes */}
-              <Route
-                path="/counsellor/dashboard"
-                element={<CounsellorDashboard />}
-              />
-              <Route
-                path="/counsellor/ofr-management"
-                element={<CounsellorOFRManagement />}
-              />
-              <Route
-                path="/counsellor/candidates"
-                element={<CandidateManagement />}
-              />
-              <Route
-                path="/counsellor/reports"
-                element={<CounsellorReports />}
-              />
-              <Route
-                path="/counsellor/mandatory-sheets"
-                element={<MandatorySheets />}
-              />
-              <Route path="/counsellor/video-logs" element={<VideoLogs />} />
-              <Route
-                path="/counsellor/parent-consent"
-                element={<ParentConsentSummary />}
-              />
-              <Route
-                path="/counsellor/pending-tasks"
-                element={<PendingTasks />}
-              />
-              <Route
-                path="/counsellor/profile"
-                element={<CounsellorProfile />}
-              />
+                {/* Counsellor Routes */}
+                <Route
+                  path="/counsellor/dashboard"
+                  element={<CounsellorDashboard />}
+                />
+                <Route
+                  path="/counsellor/ofr-management"
+                  element={<CounsellorOFRManagement />}
+                />
+                <Route
+                  path="/counsellor/candidates"
+                  element={<CandidateManagement />}
+                />
+                <Route
+                  path="/counsellor/reports"
+                  element={<CounsellorReports />}
+                />
+                <Route
+                  path="/counsellor/mandatory-sheets"
+                  element={<MandatorySheets />}
+                />
+                <Route path="/counsellor/video-logs" element={<VideoLogs />} />
+                <Route
+                  path="/counsellor/parent-consent"
+                  element={<ParentConsentSummary />}
+                />
+                <Route
+                  path="/counsellor/pending-tasks"
+                  element={<PendingTasks />}
+                />
+                <Route
+                  path="/counsellor/profile"
+                  element={<CounsellorProfile />}
+                />
 
-              {/* Center Manager Routes */}
-              <Route
-                path="/center-manager/dashboard"
-                element={
-                  <MainLayout role="center_manager" title="Dashboard">
-                    <CenterManagerDashboard />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/center-manager/enrollment"
-                element={
-                  <MainLayout role="center_manager" title="Enrollment & Batch">
-                    <EnrollmentBatch />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/center-manager/counselling"
-                element={
-                  <MainLayout
-                    role="center_manager"
-                    title="Counselling Verification"
-                  >
-                    <CounsellingVerification />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/center-manager/documents"
-                element={
-                  <MainLayout role="center_manager" title="Document Compliance">
-                    <DocumentCompliance />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/center-manager/mandatory-sheets"
-                element={
-                  <MainLayout role="center_manager" title="Mandatory Sheets">
-                    <CenterMandatorySheets />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/center-manager/video-logs"
-                element={
-                  <MainLayout
-                    role="center_manager"
-                    title="Video Logs & Orientation"
-                  >
-                    <VideoLogsOrientation />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/center-manager/attendance"
-                element={
-                  <MainLayout role="center_manager" title="Attendance Module">
-                    <AttendanceModule />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/center-manager/placement"
-                element={
-                  <MainLayout
-                    role="center_manager"
-                    title="Placement Coordination"
-                  >
-                    <PlacementCoordination />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/center-manager/travel-letters"
-                element={
-                  <MainLayout
-                    role="center_manager"
-                    title="Travel Letter Management"
-                  >
-                    <TravelLetterManagement />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/center-manager/post-placement"
-                element={
-                  <MainLayout
-                    role="center_manager"
-                    title="Post-Placement Tracking"
-                  >
-                    <PostPlacementTracking />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/center-manager/reports"
-                element={
-                  <MainLayout role="center_manager" title="Reports & Exports">
-                    <CenterReportsExports />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/center-manager/profile"
-                element={
-                  <MainLayout role="center_manager" title="Profile & Settings">
-                    <CenterProfileSettings />
-                  </MainLayout>
-                }
-              />
+                {/* Center Manager Routes */}
+                <Route
+                  path="/center-manager/dashboard"
+                  element={
+                    <MainLayout role="center_manager" title="Dashboard">
+                      <CenterManagerDashboard />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path="/center-manager/enrollment"
+                  element={
+                    <MainLayout
+                      role="center_manager"
+                      title="Enrollment & Batch"
+                    >
+                      <EnrollmentBatch />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path="/center-manager/counselling"
+                  element={
+                    <MainLayout
+                      role="center_manager"
+                      title="Counselling Verification"
+                    >
+                      <CounsellingVerification />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path="/center-manager/documents"
+                  element={
+                    <MainLayout
+                      role="center_manager"
+                      title="Document Compliance"
+                    >
+                      <DocumentCompliance />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path="/center-manager/mandatory-sheets"
+                  element={
+                    <MainLayout role="center_manager" title="Mandatory Sheets">
+                      <CenterMandatorySheets />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path="/center-manager/video-logs"
+                  element={
+                    <MainLayout
+                      role="center_manager"
+                      title="Video Logs & Orientation"
+                    >
+                      <VideoLogsOrientation />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path="/center-manager/attendance"
+                  element={
+                    <MainLayout role="center_manager" title="Attendance Module">
+                      <AttendanceModule />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path="/center-manager/placement"
+                  element={
+                    <MainLayout
+                      role="center_manager"
+                      title="Placement Coordination"
+                    >
+                      <PlacementCoordination />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path="/center-manager/travel-letters"
+                  element={
+                    <MainLayout
+                      role="center_manager"
+                      title="Travel Letter Management"
+                    >
+                      <TravelLetterManagement />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path="/center-manager/post-placement"
+                  element={
+                    <MainLayout
+                      role="center_manager"
+                      title="Post-Placement Tracking"
+                    >
+                      <PostPlacementTracking />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path="/center-manager/reports"
+                  element={
+                    <MainLayout role="center_manager" title="Reports & Exports">
+                      <CenterReportsExports />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path="/center-manager/profile"
+                  element={
+                    <MainLayout
+                      role="center_manager"
+                      title="Profile & Settings"
+                    >
+                      <CenterProfileSettings />
+                    </MainLayout>
+                  }
+                />
 
-              {/* Admin Routes (new global admin) */}
-              <Route
-                path="/admin/dashboard"
-                element={<SuperAdminDashboard />}
-              />
-              <Route path="/admin/users" element={<UserManagement />} />
-              <Route
-                path="/admin/master-data"
-                element={<MasterDataManagement />}
-              />
-              <Route path="/admin/documents" element={<DocumentGenerator />} />
-              <Route path="/admin/batches" element={<BatchManagement />} />
-              <Route
-                path="/admin/candidates"
-                element={<CandidateDirectory />}
-              />
-              <Route path="/admin/reports" element={<ReportsAnalytics />} />
-              <Route path="/admin/videos" element={<VideoLogManager />} />
-              <Route path="/admin/ai-dropout" element={<AIDropoutEngine />} />
-              <Route path="/admin/quality" element={<QualityTracker />} />
-              <Route path="/admin/sos" element={<SosEscalationTracker />} />
-              <Route path="/admin/export" element={<DataExportHub />} />
-              <Route path="/admin/settings" element={<SystemSettings />} />
+                {/* Admin Routes (new global admin) */}
+                <Route
+                  path="/admin/dashboard"
+                  element={<SuperAdminDashboard />}
+                />
+                <Route path="/admin/users" element={<UserManagement />} />
+                <Route
+                  path="/admin/master-data"
+                  element={<MasterDataManagement />}
+                />
+                <Route
+                  path="/admin/documents"
+                  element={<DocumentGenerator />}
+                />
+                <Route path="/admin/batches" element={<BatchManagement />} />
+                <Route
+                  path="/admin/candidates"
+                  element={<CandidateDirectory />}
+                />
+                <Route path="/admin/reports" element={<ReportsAnalytics />} />
+                <Route path="/admin/videos" element={<VideoLogManager />} />
+                <Route path="/admin/ai-dropout" element={<AIDropoutEngine />} />
+                <Route path="/admin/quality" element={<QualityTracker />} />
+                <Route path="/admin/sos" element={<SosEscalationTracker />} />
+                <Route path="/admin/export" element={<DataExportHub />} />
+                <Route path="/admin/settings" element={<SystemSettings />} />
 
-              {/* MIS Routes (new center-specific MIS) */}
-              <Route
-                path="/mis/dashboard"
-                element={
-                  <MainLayout role="mis" title="MIS Dashboard">
-                    <MISDashboard />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/mis/daily-activities"
-                element={
-                  <MainLayout role="mis" title="Daily Activity Management">
-                    <DailyActivityManagement />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/mis/ready-for-migration"
-                element={
-                  <MainLayout role="mis" title="Ready for Migration">
-                    <ReadyForMigration />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/mis/curriculum"
-                element={
-                  <MainLayout role="mis" title="Curriculum Management">
-                    <CurriculumManagement />
-                  </MainLayout>
-                }
-              />
+                {/* MIS Routes (new center-specific MIS) */}
+                <Route
+                  path="/mis/dashboard"
+                  element={
+                    <MainLayout role="mis" title="MIS Dashboard">
+                      <MISDashboard />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path="/mis/daily-activities"
+                  element={
+                    <MainLayout role="mis" title="Daily Activity Management">
+                      <DailyActivityManagement />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path="/mis/ready-for-migration"
+                  element={
+                    <MainLayout role="mis" title="Ready for Migration">
+                      <ReadyForMigration />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path="/mis/curriculum"
+                  element={
+                    <MainLayout role="mis" title="Curriculum Management">
+                      <CurriculumManagement />
+                    </MainLayout>
+                  }
+                />
 
-              {/* Company HR Routes */}
-              <Route
-                path="/company-hr/dashboard"
-                element={
-                  <MainLayout role="company_hr" title="Dashboard">
-                    <CompanyHRDashboard />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/company-hr/batch-management"
-                element={
-                  <MainLayout role="company_hr" title="Batch Management">
-                    <CompanyHRBatchManagement />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/company-hr/candidate-management"
-                element={
-                  <MainLayout role="company_hr" title="Candidate Management">
-                    <CompanyHRCandidateManagement />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/company-hr/travel-management"
-                element={
-                  <MainLayout role="company_hr" title="Travel Management">
-                    <CompanyHRTravelManagement />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/company-hr/interview-scheduler"
-                element={
-                  <MainLayout role="company_hr" title="Interview Scheduler">
-                    <CompanyHRInterviewScheduler />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/company-hr/feedback-management"
-                element={
-                  <MainLayout role="company_hr" title="Feedback Management">
-                    <CompanyHRFeedbackManagement />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/company-hr/reports"
-                element={
-                  <MainLayout role="company_hr" title="Reports">
-                    <CompanyHRReports />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/company-hr/profile"
-                element={
-                  <MainLayout role="company_hr" title="Profile">
-                    <CompanyHRProfile />
-                  </MainLayout>
-                }
-              />
+                {/* Company HR Routes */}
+                <Route
+                  path="/company-hr/dashboard"
+                  element={
+                    <MainLayout role="company_hr" title="Dashboard">
+                      <CompanyHRDashboard />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path="/company-hr/batch-management"
+                  element={
+                    <MainLayout role="company_hr" title="Batch Management">
+                      <CompanyHRBatchManagement />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path="/company-hr/candidate-management"
+                  element={
+                    <MainLayout role="company_hr" title="Candidate Management">
+                      <CompanyHRCandidateManagement />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path="/company-hr/travel-management"
+                  element={
+                    <MainLayout role="company_hr" title="Travel Management">
+                      <CompanyHRTravelManagement />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path="/company-hr/interview-scheduler"
+                  element={
+                    <MainLayout role="company_hr" title="Interview Scheduler">
+                      <CompanyHRInterviewScheduler />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path="/company-hr/feedback-management"
+                  element={
+                    <MainLayout role="company_hr" title="Feedback Management">
+                      <CompanyHRFeedbackManagement />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path="/company-hr/reports"
+                  element={
+                    <MainLayout role="company_hr" title="Reports">
+                      <CompanyHRReports />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path="/company-hr/profile"
+                  element={
+                    <MainLayout role="company_hr" title="Profile">
+                      <CompanyHRProfile />
+                    </MainLayout>
+                  }
+                />
 
-              {/* PPC Admin Routes */}
-              <Route
-                path="/ppc-admin/dashboard"
-                element={
-                  <MainLayout role="ppc_admin" title="Dashboard">
-                    <PPCAdminDashboard />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/ppc-admin/pre-placement"
-                element={
-                  <MainLayout role="ppc_admin" title="Pre-Placement Compliance">
-                    <PPCAdminPrePlacement />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/ppc-admin/post-placement"
-                element={
-                  <MainLayout
-                    role="ppc_admin"
-                    title="Post-Placement Management"
-                  >
-                    <PPCAdminPostPlacement />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/ppc-admin/poc-management"
-                element={
-                  <MainLayout role="ppc_admin" title="POC Management">
-                    <PPCAdminPOCManagement />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/ppc-admin/sos-monitoring"
-                element={
-                  <MainLayout role="ppc_admin" title="SOS Monitoring">
-                    <PPCAdminSOSMonitoring />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/ppc-admin/reports"
-                element={
-                  <MainLayout role="ppc_admin" title="Reports & Analytics">
-                    <PPCAdminReports />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/ppc-admin/profile"
-                element={
-                  <MainLayout role="ppc_admin" title="Profile">
-                    <PPCAdminProfile />
-                  </MainLayout>
-                }
-              />
+                {/* PPC Admin Routes */}
+                <Route
+                  path="/ppc-admin/dashboard"
+                  element={
+                    <MainLayout role="ppc_admin" title="Dashboard">
+                      <PPCAdminDashboard />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path="/ppc-admin/pre-placement"
+                  element={
+                    <MainLayout
+                      role="ppc_admin"
+                      title="Pre-Placement Compliance"
+                    >
+                      <PPCAdminPrePlacement />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path="/ppc-admin/post-placement"
+                  element={
+                    <MainLayout
+                      role="ppc_admin"
+                      title="Post-Placement Management"
+                    >
+                      <PPCAdminPostPlacement />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path="/ppc-admin/poc-management"
+                  element={
+                    <MainLayout role="ppc_admin" title="POC Management">
+                      <PPCAdminPOCManagement />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path="/ppc-admin/sos-monitoring"
+                  element={
+                    <MainLayout role="ppc_admin" title="SOS Monitoring">
+                      <PPCAdminSOSMonitoring />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path="/ppc-admin/reports"
+                  element={
+                    <MainLayout role="ppc_admin" title="Reports & Analytics">
+                      <PPCAdminReports />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path="/ppc-admin/profile"
+                  element={
+                    <MainLayout role="ppc_admin" title="Profile">
+                      <PPCAdminProfile />
+                    </MainLayout>
+                  }
+                />
 
-              {/* POC Routes */}
-              <Route
-                path="/poc/dashboard"
-                element={
-                  <MainLayout role="poc" title="Dashboard">
-                    <POCDashboard />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/poc/visits"
-                element={
-                  <MainLayout role="poc" title="Visit Management">
-                    <POCVisitManagement />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/poc/sos"
-                element={
-                  <MainLayout role="poc" title="SOS Management">
-                    <POCSOSManagement />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/poc/travel"
-                element={
-                  <MainLayout role="poc" title="Travel Management">
-                    <POCTravelManagement />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/poc/welfare"
-                element={
-                  <MainLayout role="poc" title="Welfare Facilitation">
-                    <POCWelfareFacilitation />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/poc/reports"
-                element={
-                  <MainLayout role="poc" title="Reports">
-                    <POCReports />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/poc/profile"
-                element={
-                  <MainLayout role="poc" title="Profile">
-                    <POCProfile />
-                  </MainLayout>
-                }
-              />
+                {/* POC Routes */}
+                <Route
+                  path="/poc/dashboard"
+                  element={
+                    <MainLayout role="poc" title="Dashboard">
+                      <POCDashboard />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path="/poc/visits"
+                  element={
+                    <MainLayout role="poc" title="Visit Management">
+                      <POCVisitManagement />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path="/poc/sos"
+                  element={
+                    <MainLayout role="poc" title="SOS Management">
+                      <POCSOSManagement />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path="/poc/travel"
+                  element={
+                    <MainLayout role="poc" title="Travel Management">
+                      <POCTravelManagement />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path="/poc/welfare"
+                  element={
+                    <MainLayout role="poc" title="Welfare Facilitation">
+                      <POCWelfareFacilitation />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path="/poc/reports"
+                  element={
+                    <MainLayout role="poc" title="Reports">
+                      <POCReports />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path="/poc/profile"
+                  element={
+                    <MainLayout role="poc" title="Profile">
+                      <POCProfile />
+                    </MainLayout>
+                  }
+                />
 
-              {/* Catch-all route */}
-              {/* Admin Department Routes */}
-              <Route
-                path="/admin-department/dashboard"
-                element={
-                  <MainLayout role="admin" title="Administration Dashboard">
-                    <AdminDeptDashboard />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/admin-department/property-management"
-                element={
-                  <MainLayout role="admin" title="Property Management">
-                    <PropertyManagement />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/admin-department/rent-management"
-                element={
-                  <MainLayout role="admin" title="Rent Management">
-                    <RentManagement />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/admin-department/vendor-management"
-                element={
-                  <MainLayout role="admin" title="Vendor Management">
-                    <VendorManagement />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/admin-department/food-vendor-management"
-                element={
-                  <MainLayout role="admin" title="Food Vendor Management">
-                    <FoodVendorManagement />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/admin-department/expense-management"
-                element={
-                  <MainLayout role="admin" title="Expense Management">
-                    <ExpenseManagement />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/admin-department/petty-cash-management"
-                element={
-                  <MainLayout role="admin" title="Petty Cash Management">
-                    <PettyCashManagement />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/admin-department/purchase-order-management"
-                element={
-                  <MainLayout role="admin" title="Purchase Order Management">
-                    <PurchaseOrderManagement />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/admin-department/ticket-booking"
-                element={
-                  <MainLayout role="admin" title="Ticket Booking">
-                    <TicketBooking />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/admin-department/ticket-booking-approval"
-                element={
-                  <MainLayout role="admin" title="Ticket Booking Approval">
-                    <TicketBookingApproval />
-                  </MainLayout>
-                }
-              />
-              <Route
-                path="/admin-department/reports"
-                element={
-                  <MainLayout role="admin" title="Reports">
-                    <AdminDeptReports />
-                  </MainLayout>
-                }
-              />
+                {/* Catch-all route */}
+                {/* Admin Department Routes */}
+                <Route
+                  path="/admin-department/dashboard"
+                  element={
+                    <MainLayout role="admin" title="Administration Dashboard">
+                      <AdminDeptDashboard />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path="/admin-department/property-management"
+                  element={
+                    <MainLayout role="admin" title="Property Management">
+                      <PropertyManagement />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path="/admin-department/rent-management"
+                  element={
+                    <MainLayout role="admin" title="Rent Management">
+                      <RentManagement />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path="/admin-department/vendor-management"
+                  element={
+                    <MainLayout role="admin" title="Vendor Management">
+                      <VendorManagement />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path="/admin-department/food-vendor-management"
+                  element={
+                    <MainLayout role="admin" title="Food Vendor Management">
+                      <FoodVendorManagement />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path="/admin-department/expense-management"
+                  element={
+                    <MainLayout role="admin" title="Expense Management">
+                      <ExpenseManagement />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path="/admin-department/petty-cash-management"
+                  element={
+                    <MainLayout role="admin" title="Petty Cash Management">
+                      <PettyCashManagement />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path="/admin-department/purchase-order-management"
+                  element={
+                    <MainLayout role="admin" title="Purchase Order Management">
+                      <PurchaseOrderManagement />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path="/admin-department/ticket-booking"
+                  element={
+                    <MainLayout role="admin" title="Ticket Booking">
+                      <TicketBooking />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path="/admin-department/ticket-booking-approval"
+                  element={
+                    <MainLayout role="admin" title="Ticket Booking Approval">
+                      <TicketBookingApproval />
+                    </MainLayout>
+                  }
+                />
+                <Route
+                  path="/admin-department/reports"
+                  element={
+                    <MainLayout role="admin" title="Reports">
+                      <AdminDeptReports />
+                    </MainLayout>
+                  }
+                />
 
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Suspense>
           </BrowserRouter>
         </TooltipProvider>
       </QueryClientProvider>

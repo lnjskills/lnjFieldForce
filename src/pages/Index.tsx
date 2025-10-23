@@ -27,12 +27,17 @@ const Index = () => {
 
   const userRoles = [
     {
-      value: "counsellor",
+      value: "COUNSELLOR",
       label: "Counsellor",
       path: "/counsellor/dashboard",
     },
     {
-      value: "mis",
+      value: "Admin",
+      label: "Admin",
+      path: "/admin/dashboard",
+    },
+    {
+      value: "MIS",
       label: "MIS",
       path: "/mis/dashboard",
     },
@@ -55,19 +60,21 @@ const Index = () => {
           const response = await login({
             email,
             password,
-            role: selectedRole.toUpperCase(),
+            role: selectedRole,
           }).unwrap();
 
-          // Save token to localStorage
+          // Save token and user to localStorage (used by other pages)
           localStorage.setItem("token", response.token);
+          localStorage.setItem("user", JSON.stringify(response.user));
+          localStorage.setItem("userRole", selectedRole);
           console.log("Login successful, token:", response.token);
 
           dispatch(
             setUser({
-              id: response.user.user_id,
-              name: response.user.name,
-              email: response.user.email,
+              user: response.user,
+              token: response.token,
               role: selectedRole,
+              permissions: response.permissions || {},
             })
           );
 
